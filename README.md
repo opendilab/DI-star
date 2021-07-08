@@ -1,14 +1,11 @@
 # DI-star
 This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
-**- Agent Test**.
+- [x] Play with trained agent
 
+- [ ] Supervised Learning
 
-Support in the future:
-
-**- Supervised Learning**
-
-**- Reinforcement Learning**
+- [ ] Reinforcement Learning
 
 
 ## Usage
