@@ -1,7 +1,7 @@
 # DI-star
-This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
+This project is a reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
-- [x] Play with trained agent
+- [x] Plays with trained agents
 
 - [ ] Supervised Learning
 
