@@ -1,0 +1,16 @@
+actor:
+  model_path:
+    ['D:\lustre\MP17-6-28.pth',
+     'D:\lustre\MP17-6-28.pth']
+  use_cuda: True
+  env:
+    game_type: 'human_vs_agent'  # agent_vs_agent or agent_vs_bot or human_vs_agent
+    map_name: 'NewRepugnancy' # KingsCove, KairosJunction, NewRepugnancy, CyberForest
+    realtime: True
+    replay_dir: 'ladder_0426'
+    random_seed: 10000248
+    player1:
+      name: '1'
+    player2:
+      name: '2'
+      difficulty: 'very_hard'

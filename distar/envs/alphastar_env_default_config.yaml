@@ -1,0 +1,34 @@
+env:
+    game_type: 'human_vs_agent'
+    local: True
+    screen_resolution: [1, 1]
+    default_step_mul: 8  # not used
+    game_steps_per_episode: 500000
+    disable_fog: False
+    save_replay_episodes: 1
+    random_seed: 0
+    realtime: False  # realtime mode, incompatible with action_delays
+    crop_map_to_playable_area: True
+    map_name: 'KairosJunction'
+    obs_stat_type: 'replay_last'  # self_online, replay_online, replay_last
+    pseudo_reward_type: 'global'  # global, immediate
+    pseudo_reward_prob: 0.25
+    ignore_camera: True
+    action_delays: [0.5, 0.25, 0.25]  # list of probablities of delay from 1 to n or null for delay=1
+    obs_scalar:
+        use_score_cumulative: True
+        begin_num: 20
+    obs_spatial:
+        placeholder: 'placeholder'
+    obs_entity:
+        use_raw_units: True
+        begin_num: 20
+    action:
+        placeholder: 'placeholder'
+    game_type: 'agent_vs_agent'  # game_vs_bot, agent_vs_agent
+    player1:
+        race: 'zerg'
+    player2:
+        race: 'zerg'
+        difficulty: 'very_hard'
+        build: 'random'
