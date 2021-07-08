@@ -71,7 +71,7 @@ It runs 2 StarCraftII instances. First one is controlled by our RL agent. Human 
 
 Note: 
 - GPU and CUDA is required on default, add `--cpu` if you don't have these.
-- Download RL model first or specify other models (like supervised model) with arugument `--model1 <sl_model_path>`, pass either absolute path or relative path under distar/bin/
+- Download RL model first or specify other models (like supervised model) with argument `--model1 <sl_model_path>`, pass either absolute path or relative path under distar/bin/
 - In race cases, 2 StarCraftII instances may lose connection and agent won't issue any action. Please restart when this happens.
 
 ##### Agent vs Agent
