@@ -17,7 +17,7 @@ This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenD
 
 Note: There is no retail version on Linux, please follow the instruction [here](https://github.com/Blizzard/s2client-proto#downloads)
 
-- Add SC2 installation path to environment variables(skip this if you use default installation path on MacOS or Windows, which is `C:\Program Files (x86)\StarCraft II` or `/Applications/StarCraft II`):
+- Add SC2 installation path to environment variables ```SC2PATH``` (skip this if you use default installation path on MacOS or Windows, which is `C:\Program Files (x86)\StarCraft II` or `/Applications/StarCraft II`):
 
     - On MacOS or Linux, input this in terminal:
 
@@ -29,7 +29,7 @@ Note: There is no retail version on Linux, please follow the instruction [here](
        1. Right-click the Computer icon and choose Properties, or in Windows Control Panel, choose System.
        2. Choose Advanced system settings.
         3. On the Advanced tab, click Environment Variables.
-        4. Click New to create a new environment variable, input  sc2 installation path.
+        4. Click New to create a new environment variable, set ```SC2PATH``` as the sc2 installation location.
         5. After creating or modifying the environment variable, click Apply and then OK to have the change take effect.
 
 
