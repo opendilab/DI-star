@@ -47,7 +47,8 @@ Pytorch Version 1.7.1 and CUDA is recommended, Follow instructions from [pytorch
 
 
 
-**Note: GPU is neccessary for decent performance in realtime agent test, you can also use pytorch without cuda, but no performance guaranteed due to inference latency on cpu.**
+**Note: GPU is neccessary for decent performance in realtime agent test, you can also use pytorch without cuda, but no performance guaranteed due to inference latency on cpu.
+Make sure you set SC2 at lowest picture quality before testing.**
 
 ### Play
 
