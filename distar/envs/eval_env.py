@@ -13,6 +13,7 @@ import ctools.pysc2.env.sc2_env as sc2_env
 from ctools.pysc2.env.sc2_env import SC2Env
 from ctools.pysc2.env.sc2_eval_env import SC2EVALEnv
 from ctools.pysc2.lib.action_dict import GENERAL_ACTION_INFO_MASK
+from ctools.pysc2.lib.actions import FunctionCall
 from .other.alphastar_map import get_map_size
 from .action.alphastar_action_runner import AlphaStarRawActionRunner
 from .reward.alphastar_reward_runner import AlphaStarRewardRunner
@@ -192,6 +193,11 @@ class EvalEnv(BaseEnv, SC2EVALEnv):
         locations = [action_data[i]['action']['target_location'] for i in range(self._agent_num)]
 
         raw_action, delay, action = self._action_helper.get(self)
+        raw_action = list(raw_action)
+        for i, r_act in enumerate(raw_action):
+            if r_act.function == 1:
+                location = r_act.arguments[-1]
+                raw_action[i] = [r_act, FunctionCall(168, [location])]
         prev_due = copy.deepcopy(self.due)
         # get step_mul
         for n in range(self._agent_num):
