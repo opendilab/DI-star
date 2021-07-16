@@ -13,15 +13,10 @@
 # limitations under the License.
 """A basic Color class."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import collections
 import math
 import random
 
-from future.builtins import range  # pylint: disable=redefined-builtin
 import numpy
 
 from ctools.pysc2.lib import static_data

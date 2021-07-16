@@ -14,15 +14,10 @@
 # limitations under the License.
 """Benchmark observation times."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import time
 
 from absl import app
 from absl import flags
-from future.builtins import range  # pylint: disable=redefined-builtin
 
 from ctools.pysc2 import maps
 from ctools.pysc2 import run_configs

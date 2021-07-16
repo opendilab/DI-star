@@ -13,10 +13,6 @@
 # limitations under the License.
 """Define the scout_test map configs."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from ctools.pysc2.maps import lib
 
 

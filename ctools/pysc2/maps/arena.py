@@ -3,8 +3,6 @@
 # 20180612 qing, adopted from melee.py
 """Define the arena map configs."""
 
-from __future__ import absolute_import
-
 from ctools.pysc2.maps import lib
 
 

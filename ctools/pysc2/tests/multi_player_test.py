@@ -14,15 +14,10 @@
 # limitations under the License.
 """Test that multiplayer works independently of the SC2Env."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from absl import logging
 import os
 
 from absl.testing import absltest
-from future.builtins import range  # pylint: disable=redefined-builtin
 
 from ctools.pysc2 import maps
 from ctools.pysc2 import run_configs

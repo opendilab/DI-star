@@ -5,9 +5,6 @@ Main Function:
     1. parse numpy arrays observations into tensors that pytorch can use
     2. compress and decompress the processed data
 '''
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import copy
 import numpy as np

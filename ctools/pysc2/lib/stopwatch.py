@@ -13,10 +13,6 @@
 # limitations under the License.
 """A stopwatch to check how much time is used by bits of code."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import collections
 import functools
 import math
@@ -25,7 +21,6 @@ import sys
 import threading
 import time
 
-from future.builtins import range  # pylint: disable=redefined-builtin
 import six
 
 

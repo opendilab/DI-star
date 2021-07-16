@@ -13,10 +13,6 @@
 # limitations under the License.
 """Module setuptools script."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from setuptools import setup
 
 description = """distar - StarCraft II Learning Environment
@@ -73,8 +69,6 @@ setup(
     ],
     install_requires=[
         'absl-py>=0.1.0',
-        'future',
-        'futures; python_version == "2.7"',
         'mock',
         'mpyq',
         'numpy>=1.10',

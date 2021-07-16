@@ -16,10 +16,6 @@
 Check ctools.pysc2/bin/play_vs_agent.py for documentation.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import binascii
 import collections
 import hashlib
@@ -32,7 +28,6 @@ import subprocess
 import threading
 import time
 
-from future.builtins import range  # pylint: disable=redefined-builtin
 from ctools.pysc2 import run_configs
 from ctools.pysc2.env import sc2_env
 from ctools.pysc2.lib import features

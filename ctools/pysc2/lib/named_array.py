@@ -17,15 +17,10 @@ https://docs.scipy.org/doc/numpy/user/basics.rec.html are not enough since they
 actually change the type and don't interoperate well with tensorflow.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numbers
 import re
 
 import enum
-from future.builtins import range  # pylint: disable=redefined-builtin
 import numpy as np
 import six
 

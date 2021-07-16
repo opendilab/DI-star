@@ -23,10 +23,6 @@ And on the machine the client(agent2) plays on:
 $ python -m ctools.pysc2.bin.agent_vs_agent --noserver --agent tstarbot.agents.zerg_agent.ZergAgent --agent_race zerg
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import importlib
 from absl import logging
 import sys
