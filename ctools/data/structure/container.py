@@ -3,10 +3,13 @@ import numbers
 from collections.abc import Sequence
 from functools import reduce
 from itertools import product
-from typing import Union, Any, Optional, Callable
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
+
+
+RegularDataType = Union[torch.Tensor, np.ndarray]
 
 
 class SequenceContainer:
@@ -17,23 +20,23 @@ class SequenceContainer:
     """
     _name = 'SequenceContainer'
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Union[torch.Tensor, Sequence]):
         """
         Overview: init the container with input data(dict-style), and add the additional first dim for easy management
-        Note: only supoort value type: torch.Tensor, Sequence
+        Note: only support value type: torch.Tensor, Sequence
         """
-        for k in kwargs.keys():
-            if isinstance(kwargs[k], torch.Tensor):
-                kwargs[k] = kwargs[k].unsqueeze(0)
-            elif isinstance(kwargs[k], Sequence):
-                kwargs[k] = [kwargs[k]]
+        for k, v in kwargs.items():
+            if isinstance(v, torch.Tensor):
+                v.unsqueeze_(0)
+            elif isinstance(v, Sequence):
+                kwargs[k] = [v]
             else:
-                raise TypeError("not support type in class {}: {}".format(self._name, type(kwargs[k])))
+                raise TypeError("not support type in class {}: {}".format(self._name, type(v)))
 
         self.__dict__.update(kwargs)
         self._length = 1
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Overview: return the current length of the container
         Returns:
@@ -42,7 +45,7 @@ class SequenceContainer:
         return self._length
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Overview: return the container class name
         Returns:
@@ -52,7 +55,7 @@ class SequenceContainer:
         return self._name
 
     @property
-    def keys(self):
+    def keys(self) -> List[str]:
         """
         Overview: return the data keys
         Returns:
@@ -62,7 +65,7 @@ class SequenceContainer:
         keys.remove('_length')
         return keys
 
-    def value(self, k):
+    def value(self, k: str):
         """
         Overview: get one of the value of all the elements in the container, according to input k
         Arguments:
@@ -73,7 +76,7 @@ class SequenceContainer:
         assert (k in self.keys)
         return self.__dict__[k]
 
-    def cat(self, data):
+    def cat(self, data: 'SequenceContainer'):
         """
         Overview: concatenate the same class container object, inplace, each value does cat operation seperately
         Arguments:
@@ -97,7 +100,7 @@ class SequenceContainer:
                 raise TypeError("not support type in class {}: {}".format(self._name, type(data_val)))
         self._length += len(data)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int):
         # TODO(nyz) raw data interface
         """
         Overview: get data by the index, return the SequenceContainer object rather than raw data
@@ -109,7 +112,7 @@ class SequenceContainer:
         data = {k: copy.deepcopy(self.__dict__[k][idx]) for k in self.keys}
         return SequenceContainer(**data)
 
-    def __eq__(self, other):
+    def __eq__(self, other: 'SequenceContainer') -> bool:
         """
         Overview: judge whether the other object is equal to self
         Arguments:
@@ -141,7 +144,7 @@ class SequenceContainer:
         return True
 
 
-class BaseContainer(object):
+class BaseContainer:
     """
     agent_num, trajectory_len, batch_size
     """
@@ -178,13 +181,12 @@ class BaseContainer(object):
         raise NotImplementedError
 
 
-def to_keep_dim_index(idx):
+def to_keep_dim_index(idx: Union[int, slice, list, tuple]):
 
-    def int2slice(t):
+    def int2slice(t: int) -> slice:
         return slice(t, t + 1)
 
-    def single_list2slice(t):
-        assert len(t) == 1
+    def single_list2slice(t: List[int]) -> slice:
         return slice(t[0], t[0] + 1)
 
     if isinstance(idx, int):
@@ -208,8 +210,7 @@ def to_keep_dim_index(idx):
 
 
 class RegularContainer(BaseContainer):
-
-    def __init__(self, data: Any, shape: Optional[tuple] = tuple()) -> None:
+    def __init__(self, data: RegularDataType, shape: Optional[Tuple[int, ...]] = tuple()):
         assert len(shape) == 0 or (len(shape) == 3 and all([isinstance(s, numbers.Integral) for s in shape])), shape
         if len(shape) == 0:
             self._data = data.reshape(1, 1, 1, *data.shape)
@@ -219,7 +220,7 @@ class RegularContainer(BaseContainer):
             )
             self._data = data
         # the following member variable need to be overrided by subclass
-        self.cat_fn = None
+        self.cat_fn: Callable[[RegularDataType], RegularDataType] = None
 
     def cat(self, other: 'RegularContainer', dim: int) -> None:
         """
@@ -287,28 +288,27 @@ class NumpyContainer(RegularContainer):
     def __init__(self, data: np.ndarray, shape: Optional[tuple] = tuple()) -> None:
         super(NumpyContainer, self).__init__(data, shape)
         self._available_dtype = [np.int64, np.float32]
-        self.cat_fn = np.concatenate
+        self.cat_fn: Callable[[Iterable[np.ndarray]], np.ndarray] = np.concatenate
 
     def __repr__(self) -> str:
         return 'NumpyContainer(agent_num={}, trajectory_len={}, batch_size={})'.format(*self.shape)
 
     def to_dtype(self, dtype: torch.dtype) -> None:
-        assert dtype in self._available_dtype, '{}/{}'.format(dtype, self._available_dtype)
+        assert dtype in self._available_dtype, f'{dtype} / {self._available_dtype}'
         self._data = self._data.astype(dtype)
 
 
 class SpecialContainer(BaseContainer):
 
-    def __init__(
-            self,
-            data: Any,
-            shape: Optional[tuple] = tuple(),
-            dtype_fn: Optional[Callable[[Any], None]] = None,
-            available_dtype: Optional[list] = None
-    ) -> None:
+    def __init__(self,
+                 data: Any,
+                 shape: Optional[Tuple[int, ...]] = tuple(),
+                 dtype_fn: Optional[Callable[[Any], None]] = None,
+                 available_dtype: Optional[list] = None
+                 ):
         self._data = []
         self._shape = []
-        self._index_map = {}
+        self._index_map: Dict[str, int] = {}
         self._data_idx = 0
 
         if len(shape) == 0:
@@ -329,7 +329,7 @@ class SpecialContainer(BaseContainer):
         self._dtype_fn = dtype_fn
         self._available_dtype = available_dtype
 
-    def cat(self, other: 'SpecialContainer', dim: int) -> None:
+    def cat(self, other: 'SpecialContainer', dim: int):
         """
         Inplace cat
         """
@@ -405,7 +405,7 @@ class SpecialContainer(BaseContainer):
         return self._available_dtype
 
     @property
-    def item(self) -> Any:
+    def item(self):
         assert self.shape == (1, 1, 1), self.shape
         return self._data[0]
 

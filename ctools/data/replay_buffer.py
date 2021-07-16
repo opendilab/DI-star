@@ -1,12 +1,11 @@
 import copy
-import os.path as osp
-from threading import Thread
-from typing import Union
+import os
+from typing import Optional, Union
 
-from ctools.data.structure import PrioritizedBuffer, Cache
-from ctools.utils import LockContext, LockContextType, read_config, deep_merge_dicts
+from .structure import PrioritizedBuffer
+from ctools.utils import read_config, deep_merge_dicts
 
-default_config = read_config(osp.join(osp.dirname(__file__), 'replay_buffer_default_config.yaml')).replay_buffer
+default_config = read_config(os.path.join(os.path.dirname(__file__), 'replay_buffer_default_config.yaml')).replay_buffer
 
 
 class ReplayBuffer:
@@ -15,17 +14,18 @@ class ReplayBuffer:
     Interface: __init__, push_data, sample, update, run, close
     """
 
-    def __init__(self, cfg: dict):
+    def __init__(self, cfg: 'EasyDict'):
         """
         Overview: initialize replay buffer
         Arguments:
             - cfg (:obj:`dict`): config dict
         """
         self.cfg = deep_merge_dicts(default_config, cfg)
-        max_reuse = self.cfg.max_reuse if 'max_reuse' in self.cfg.keys() else None
-        delete_cache_length = cfg.get('delete_cache_length', 50)
-        self.traj_len = cfg.get('traj_len', None)
-        self.unroll_len = cfg.get('unroll_len', None)
+        # TODO(Local State): type annotation error, deep_merge_dicts requires dict rather than EasyDict
+        max_reuse: Optional[int] = self.cfg.get('max_reuse')
+        delete_cache_length: int = cfg.get('delete_cache_length', 50)
+        self.traj_len: Optional[int] = cfg.get('traj_len')
+        self.unroll_len: Optional[int] = cfg.get('unroll_len')
         self._meta_buffer = PrioritizedBuffer(
             maxlen=self.cfg.meta_maxlen,
             max_reuse=max_reuse,
@@ -86,7 +86,6 @@ class ReplayBuffer:
         Note: thread-safe
         """
         self._meta_buffer.update(info)
-
 
     @property
     def count(self):

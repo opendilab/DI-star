@@ -15,7 +15,7 @@ class Cache:
         remain_data_count
     """
 
-    def __init__(self, maxlen, timeout, monitor_interval=1.0, _debug=False):
+    def __init__(self, maxlen: int, timeout: float, monitor_interval: float = 1.0, _debug: bool = False):
         r"""
         Overview:
             initialize the cache object
@@ -83,7 +83,7 @@ class Cache:
                     if not is_timeout:
                         break
 
-    def _warn_if_timeout(self):
+    def _warn_if_timeout(self) -> bool:
         r"""
         Overview:
             return whether is timeout
@@ -122,7 +122,7 @@ class Cache:
             print('[CACHE] ' + s)
 
     @property
-    def remain_data_count(self):
+    def remain_data_count(self) -> int:
         r"""
         Overview:
             return the remain data count in the receive queue

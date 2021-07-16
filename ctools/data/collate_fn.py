@@ -1,9 +1,15 @@
 from collections.abc import Sequence, Mapping
 from typing import List, Dict, Union, Any
-
-import torch
 import re
-from torch._six import container_abcs, string_classes, int_classes
+import typing
+
+import numpy as np
+import torch
+import torch.utils.data
+
+import collections.abc as container_abcs
+from torch._six import string_classes
+int_classes = (bool, int)
 
 np_str_obj_array_pattern = re.compile(r'[SaUO]')
 
@@ -13,7 +19,7 @@ default_collate_err_msg_format = (
 )
 
 
-def default_collate(batch: Sequence) -> Union[torch.Tensor, Mapping, Sequence]:
+def default_collate(batch: typing.Sequence[Union[torch.Tensor, np.ndarray, float, int, bool]]) -> Union[torch.Tensor, Mapping, Sequence]:
     """
     Overview:
         Put each data field into a tensor with outer dimension batch size.
@@ -117,7 +123,7 @@ def timestep_collate(batch: List[Dict[str, Any]]) -> Dict[str, Union[torch.Tenso
     return batch
 
 
-def diff_shape_collate(batch: Sequence) -> Union[torch.Tensor, Mapping, Sequence]:
+def diff_shape_collate(batch: typing.Sequence[Union[torch.Tensor, np.ndarray, float, int, bool]]) -> Union[torch.Tensor, Mapping, Sequence]:
     """
     Overview:
         Similar to ``default_collate``, put each data field into a tensor with outer dimension batch size.
