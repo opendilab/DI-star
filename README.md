@@ -1,3 +1,8 @@
+[![qq](https://img.shields.io/badge/qq群-700157520-green)]() <!-- # TODO: hyperlink jump -->
+[![wechat](https://img.shields.io/badge/wechat-OpenDILab-green)](weixin://) <!-- # TODO： hyperlink jump -->
+[![weibo](https://img.shields.io/badge/weibo-OpenDILab决策AI-green)](http://t.cn/A6fWCllb)
+[![email](https://img.shields.io/badge/email-opendilab.contact@gmail.com-informational)](mailto:opendilab.contact@gmail.com)
+
 # DI-star
 This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
