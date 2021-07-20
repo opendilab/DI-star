@@ -1,26 +1,25 @@
 import threading
 import queue
-from typing import Iterable, Callable, Optional, Any, Union
+from typing import Callable, Optional, Any, Union
 
 import time
 import torch
-from copy import deepcopy
 from ctools.torch_utils import to_device
 from .collate_fn import default_collate
 
 
-class AsyncDataLoader(object):
+class AsyncDataLoader:
     def __init__(
             self,
             data_source: Union[Callable, dict],
             batch_size: int,
             device: str,
-            chunk_size: Optional[int] = None,
+            # chunk_size: Optional[int] = None,
             collate_fn: Optional[Callable] = None,
             num_workers: int = 0,
-            use_async=True,
-            use_async_cuda=True,  # using aysnc cuda costs extra GPU memory
-            max_reuse=0,
+            use_async: bool = True,
+            use_async_cuda: bool = True,  # using aysnc cuda costs extra GPU memory
+            max_reuse: int = 0,
     ) -> None:
         self.use_async = use_async
         self.use_async_cuda = use_async_cuda
@@ -41,7 +40,6 @@ class AsyncDataLoader(object):
                 'num_workers should be non-negative; '
                 'use num_workers = 0 or 1 to disable multiprocessing.'
             )
-        
         self.reuse_count = max_reuse
         self.max_reuse = max_reuse
         self.cache_data = None
@@ -52,7 +50,8 @@ class AsyncDataLoader(object):
             self.data_queue = queue.Queue(maxsize=self.queue_maxsize)
             self.read_data_thread = threading.Thread(target=self.read_data_loop, args=(), daemon=True)
             self.read_data_thread.start()
-            self.workers = [threading.Thread(target=self._worker_loop, args=(), daemon=True) for _ in range(self.num_workers)]
+            self.workers = [threading.Thread(target=self._worker_loop, args=(), daemon=True)
+                            for _ in range(self.num_workers)]
             for w in self.workers:
                 w.start()
 
@@ -64,13 +63,12 @@ class AsyncDataLoader(object):
                 self.cuda_thread.daemon = True
                 self.cuda_thread.start()
 
-
-    def __iter__(self) -> Iterable:
+    def __iter__(self) -> 'AsyncDataLoader':
         """
         Overview:
             Return the iterable self as an iterator
         Returns:
-            - self (:obj:`Iterable`): self as an iterator
+            - self (:obj:`AsyncDataLoader`): self as an iterator
         """
         return self
 
@@ -113,11 +111,11 @@ class AsyncDataLoader(object):
     def sync_loop(self):
         while True:
             try:
-                data = self.data_source(self.batch_size, paths)
+                data = self.data_source(self.batch_size, paths)  # TODO(Local State) `paths` is not defined
                 for i in range(len(data)):
                     data[i] = data[i]()
                 break
-            except:
+            except Exception:
                 pass
         data = self.collate_fn(data)
         if self.use_cuda:
@@ -148,5 +146,3 @@ class AsyncDataLoader(object):
                 return self.data_queue.get()
         else:
             return self.sync_loop()
-
-

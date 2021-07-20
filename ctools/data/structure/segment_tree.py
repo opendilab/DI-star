@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Callable, Iterable, List, Optional
 
 
 class SegmentTree:
@@ -8,7 +9,7 @@ class SegmentTree:
     Interface: __init__, reduce, __setitem__, __getitem__
     """
 
-    def __init__(self, capacity, operation, neutral_element=None):
+    def __init__(self, capacity: int, operation: Callable[[Iterable[float]], float], neutral_element: Optional[float] = None):
         """
         Overview: initialize the segment tree
         Arguments:
@@ -34,7 +35,7 @@ class SegmentTree:
         # for each parent node with index i, left child is value[2*i] while right child is value[2*i+1]
         self.value = [self.neutral_element for _ in range(2 * capacity)]
 
-    def reduce(self, start=0, end=None):
+    def reduce(self, start: int = 0, end: Optional[int] = None) -> float:
         """
         Overview: reduce the tree in range [start, end)
         Arguments:
@@ -65,7 +66,7 @@ class SegmentTree:
             end = end >> 1
         return result
 
-    def __setitem__(self, idx, val):
+    def __setitem__(self, idx: int, val: List[float]):
         """
         Overview: set leaf[idx] = val and update the related nodes
         Arguments:
@@ -82,7 +83,7 @@ class SegmentTree:
             self.value[idx] = self.operation([self.value[child_base], self.value[child_base + 1]])
             idx = idx >> 1
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> float:
         """
         Overview: get leaf[idx]
         Arguments:
@@ -96,10 +97,10 @@ class SegmentTree:
 
 class SumSegmentTree(SegmentTree):
 
-    def __init__(self, capacity):
+    def __init__(self, capacity: int):
         super(SumSegmentTree, self).__init__(capacity, operation=sum)
 
-    def find_prefixsum_idx(self, prefixsum, trust_caller=True):
+    def find_prefixsum_idx(self, prefixsum: float, trust_caller: bool = True) -> int:
         """
         Overview: find the highest non-zero index i, which for j in 0 <= j < i, sum_{j}leaf[j] <= prefixsum
         Arguments:
@@ -110,7 +111,7 @@ class SumSegmentTree(SegmentTree):
         """
         if not trust_caller:
             assert 0 <= prefixsum <= self.reduce() + 1e-5
-        idx = 1  # parent node
+        idx: int = 1  # parent node
         while idx < self.capacity:  # non-leaf node
             child_base = 2 * idx
             if self.value[child_base] > prefixsum:
@@ -133,5 +134,5 @@ class SumSegmentTree(SegmentTree):
 
 class MinSegmentTree(SegmentTree):
 
-    def __init__(self, capacity):
+    def __init__(self, capacity: int):
         super(MinSegmentTree, self).__init__(capacity, operation=min)

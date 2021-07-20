@@ -1,18 +1,16 @@
 import copy
 import time
-import numbers
 import os
-import pprint
-from queue import Queue
 import random
-from typing import Union, NoReturn, Any
 from collections import defaultdict
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import numpy as np
 
-from ctools.data.structure.segment_tree import SumSegmentTree, MinSegmentTree
-import threading
+from .segment_tree import SumSegmentTree, MinSegmentTree
 from ctools.utils import remove_file
+
+DataType = Dict[str, Any]   # TODO(Local State) replace Any with a specific DataType
 
 
 class PrioritizedBuffer:
@@ -30,13 +28,13 @@ class PrioritizedBuffer:
     def __init__(
         self,
         maxlen: int,
-        max_reuse: Union[int, None] = None,
+        max_reuse: Optional[int] = None,
         min_sample_ratio: float = 1.,
         alpha: float = 0.,
         beta: float = 0.,
         enable_track_used_data: bool = False,
-        delete_cache_length=50,
-        path_traj=None,
+        # delete_cache_length: int = 50,
+        path_traj: Optional[str] = None,
     ):
         r"""
         Overview:
@@ -58,8 +56,8 @@ class PrioritizedBuffer:
             self.used_data = defaultdict(list)
             self._path_traj = path_traj
 
-        self._data = [None for _ in range(maxlen)]
-        self._reuse_count = {idx: 0 for idx in range(maxlen)}
+        self._data: List[DataType] = [None for _ in range(maxlen)]
+        self._reuse_count: Dict[int, int] = {idx: 0 for idx in range(maxlen)}
 
         self.max_reuse = max_reuse if max_reuse is not None else np.inf
         assert (min_sample_ratio >= 1)
@@ -82,10 +80,9 @@ class PrioritizedBuffer:
         self.latest_data_id = 0
 
         # data check function list
-        self.check_list = [lambda x: isinstance(x, dict)]
+        self.check_list: List[Callable[[DataType], bool]] = [lambda x: isinstance(x, dict)]
 
-
-    def _set_weight(self, idx: int, data):
+    def _set_weight(self, idx: int, data: DataType):
         r"""
         Overview:
             set the priority and tree weight of the input data
@@ -100,7 +97,7 @@ class PrioritizedBuffer:
         self.sum_tree[idx] = weight
         self.min_tree[idx] = weight
 
-    def sample(self, size: int, recycle_paths) -> Union[None, list]:
+    def sample(self, size: int, recycle_paths: List[str]) -> Optional[List[DataType]]:
         r"""
         Overview:
             sample data with `size`
@@ -125,7 +122,7 @@ class PrioritizedBuffer:
         indices = self._get_indices(size)
         return self._sample_with_indices(indices)
 
-    def append(self, ori_data):
+    def append(self, ori_data: DataType):
         r"""
         Overview:
             append a data item into queue
@@ -142,15 +139,16 @@ class PrioritizedBuffer:
         if self._data[self.pointer] is None:
             self._valid_count += 1
         else:
+            traj_id = self._data[self.pointer]['traj_id']
             if self._enable_track_used_data:
-                if sum(self.used_data[self._data[self.pointer]['traj_id']]) == 0:
-                    self.used_data.pop(self._data[self.pointer]['traj_id'])
-                    file_path = os.path.join(self._path_traj, self._data[self.pointer]['traj_id'])
+                if sum(self.used_data[traj_id]) == 0:
+                    self.used_data.pop(traj_id)
+                    file_path = os.path.join(self._path_traj, traj_id)
                     if os.path.exists(file_path):
                         os.remove(file_path)
                 else:
                     for i in range(self.max_reuse + 1 - self._reuse_count[self.pointer]):
-                        self.used_data[self._data[self.pointer]['traj_id']] += [-1, 1]
+                        self.used_data[traj_id] += [-1, 1]
 
         self._push_count += 1
         data['replay_unique_id'] = self.latest_data_id
@@ -161,7 +159,7 @@ class PrioritizedBuffer:
         self.pointer = (self.pointer + 1) % self._maxlen
         self.latest_data_id += 1
 
-    def extend(self, ori_data):
+    def extend(self, ori_data: DataType):
         r"""
         Overview:
             extend a data list into queue
@@ -199,14 +197,14 @@ class PrioritizedBuffer:
         self.pointer = (self.pointer + length) % self._maxlen
         self.latest_data_id += length
 
-    def update(self, info: dict):
+    def update(self, info: DataType):
         r"""
         Overview:
             update priority according to the id and idx
         Arguments:
             - info (:obj:`dict`): info dict contains all the necessary for update priority
         """
-        data = [info['replay_unique_id'], info['replay_buffer_idx'], info['priority']]
+        data: List[Union[int, float]] = [info['replay_unique_id'], info['replay_buffer_idx'], info['priority']]
         for id_, idx, priority in zip(*data):
             # if the data still exists in the queue, then do the update operation
             if self._data[idx] is not None \
@@ -217,7 +215,7 @@ class PrioritizedBuffer:
                 # update max priority
                 self.max_priority = max(self.max_priority, priority)
 
-    def _data_check(self, d) -> bool:
+    def _data_check(self, d: DataType) -> bool:
         r"""
         Overview:
             data legality check
@@ -229,7 +227,7 @@ class PrioritizedBuffer:
         # only the data pass all the check function does the check return True
         return all([fn(d) for fn in self.check_list])
 
-    def _get_indices(self, size: int) -> list:
+    def _get_indices(self, size: int) -> List[int]:
         r"""
         Overview:
             according to the priority probability, get the sample index
@@ -241,7 +239,7 @@ class PrioritizedBuffer:
         # average divide size intervals and sample from them
         intervals = np.array([i * 1.0 / size for i in range(size)])
         # uniform sample in each interval
-        mass = intervals + np.random.uniform(size=(size, )) * 1. / size
+        mass: np.ndarray = intervals + np.random.uniform(size=(size, )) * 1. / size
         # rescale to [0, S), which S is the sum of the total sum_tree
         mass *= self.sum_tree.reduce()
         # find prefix sum index to approximate sample with probability
@@ -257,24 +255,19 @@ class PrioritizedBuffer:
             - result (:obj:`bool`): whether the buffer can sample
         """
         if self._valid_count < size:
-            print(
-                "[INFO({})] no enough element for sample(expect: {}/current have: {})".format(
-                    time.time(), size, self._valid_count
-                )
-            )
+            print(f"[INFO({time.time()})] no enough element for sample "
+                  f"(expect: {size} / current have: {self._valid_count})")
             return False
         elif self._push_count < self.min_sample_ratio:
-            print(
-                "[INFO({})] push count is not enough for sample(expect: {}/current have: {})".format(
-                    time.time(), self.min_sample_ratio, self._push_count
-                )
-            )
+            print(f"[INFO({time.time()})] push count is not enough for sample "
+                  f"(expect: {self.min_sample_ratio} / current have: {self._push_count})")
+            return False
         else:
             if random.randint(1, 10) == 1:
-                print("[INFO({}) current data size:{}]".format(time.time(), self._valid_count))
+                print(f"[INFO({time.time()}) current data size:{self._valid_count}]")
             return True
 
-    def _sample_with_indices(self, indices: list) -> list:
+    def _sample_with_indices(self, indices: List[int]) -> List[DataType]:
         r"""
         Overview:
             sample the data with indices and update the internal variable
@@ -309,22 +302,22 @@ class PrioritizedBuffer:
                 self._valid_count -= 1
         return data
 
-    @property
+    @ property
     def maxlen(self) -> int:
         return self._maxlen
 
-    @property
+    @ property
     def validlen(self) -> int:
         return self._valid_count
 
-    @property
+    @ property
     def beta(self) -> float:
         return self._beta
 
-    @beta.setter
-    def beta(self, beta: float) -> NoReturn:
+    @ beta.setter
+    def beta(self, beta: float) -> None:
         self._beta = beta
 
-    @property
+    @ property
     def push_count(self) -> int:
         return self._push_count

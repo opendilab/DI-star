@@ -1,24 +1,25 @@
+
+import logging
 import os
 import queue
+import requests
 import sys
 import threading
 import time
 import traceback
-import logging
-from typing import Iterable, Callable, Optional, Any, Union
+from typing import Callable, Optional, Any, Union
 
-import requests
 import torch
 import torch.multiprocessing as tm
 from ctools.torch_utils import to_device
-from ctools.utils.compression_helper import get_data_decompressor
+# from ctools.utils.compression_helper import get_data_decompressor
 from ctools.utils.file_helper import remove_file
 from ctools.utils.log_helper import TextLogger
 
 from .collate_fn import default_collate
 
 
-def _read_data_loop(worker_queue, url_prefix, batch_size, learner_uid=0) -> None:
+def _read_data_loop(worker_queue: queue.Queue, url_prefix: str, batch_size: int, learner_uid: int = 0) -> None:
     logger = logging.getLogger('default_logger')
     api = 'coordinator/ask_for_metadata'
     while True:
@@ -46,9 +47,11 @@ def _read_data_loop(worker_queue, url_prefix, batch_size, learner_uid=0) -> None
         worker_queue.put(data)
 
 
-def _worker_loop(data_queue, collate_fn, path_traj, url_prefix, learner_uid, batch_size,num_workers,cur_batch,
-                 decompress_type='none', ) -> None:
-    logger = TextLogger(path='.log', name='data_loader_read_loop')
+def _worker_loop(data_queue: queue.Queue, collate_fn: Callable, path_traj: str, url_prefix: str,
+                 learner_uid: int, batch_size: int, num_workers: int, cur_batch,
+                 decompress_type: str = 'none') -> None:
+    # TODO(Local State) type annotation of cur_batch
+    # logger = TextLogger(path='.log', name='data_loader_read_loop')
     torch.set_num_threads(4)
     worker_queue = queue.Queue(maxsize=3)
     read_data_thread = threading.Thread(
@@ -56,7 +59,7 @@ def _worker_loop(data_queue, collate_fn, path_traj, url_prefix, learner_uid, bat
     read_data_thread.start()
     print('start read loop')
 
-    decompressor = get_data_decompressor(decompress_type)
+    # decompressor = get_data_decompressor(decompress_type)
 
     while True:
         if worker_queue.empty() or data_queue.full():
@@ -64,7 +67,7 @@ def _worker_loop(data_queue, collate_fn, path_traj, url_prefix, learner_uid, bat
             continue
         try:
             data = worker_queue.get()
-            load_t = time.time()
+            # load_t = time.time()
             for i in range(len(data)):
                 filename = data[i]
                 filepath = os.path.join(path_traj, filename)
@@ -74,7 +77,7 @@ def _worker_loop(data_queue, collate_fn, path_traj, url_prefix, learner_uid, bat
         except Exception as e:
             print(e)
             continue
-        
+
         data = collate_fn(data)
         while data_queue.full():
             time.sleep(0.01)
@@ -83,7 +86,7 @@ def _worker_loop(data_queue, collate_fn, path_traj, url_prefix, learner_uid, bat
             cur_batch.value = (cur_batch.value + 1) % num_workers
 
 
-def _cuda_loop(cuda_queue, data_queue, device) -> None:
+def _cuda_loop(cuda_queue: queue.Queue, data_queue: queue.Queue, device: Union[torch.device, str, None]) -> None:
     """
             Overview:
                 Only when using cuda, would this be run as a thread through ``self.cuda_thread``.
@@ -92,13 +95,12 @@ def _cuda_loop(cuda_queue, data_queue, device) -> None:
     stream = torch.cuda.Stream(device=device)
     with torch.cuda.stream(stream):
         while True:
-            
             while data_queue.empty():
                 time.sleep(0.05)
             data = data_queue.get()
             while cuda_queue.full():
                 time.sleep(0.05)
-            t = time.time()
+            # t = time.time()
             data = to_device(data, device)
             cuda_queue.put(data)
 
@@ -114,10 +116,10 @@ class AsyncDataLoader(object):
             path_traj: str,
             collate_fn: Optional[Callable] = None,
             num_workers: int = 0,
-            use_async=True,
-            use_async_cuda=True,  # using aysnc cuda costs extra GPU memory
-            max_reuse=0,
-            decompress_type='none',
+            use_async: bool = True,
+            use_async_cuda: bool = True,  # using aysnc cuda costs extra GPU memory
+            max_reuse: int = 0,
+            decompress_type: str = 'none',
     ) -> None:
         self.url_prefix = url_prefix
         self.path_traj = path_traj
@@ -145,8 +147,8 @@ class AsyncDataLoader(object):
 
         self.reuse_count = max_reuse
         self.max_reuse = max_reuse
-        context_str = 'spawn'  # if platform.system().lower() == 'windows' else 'forkserver'
-        mp_context = tm.get_context(context_str)
+        # context_str = 'spawn'  # if platform.system().lower() == 'windows' else 'forkserver'
+        # mp_context = tm.get_context(context_str)
         mp_context_fork = tm.get_context('forkserver')
         self.cur_batch = mp_context_fork.Value('i', 0)
         if self.use_async:
@@ -173,19 +175,19 @@ class AsyncDataLoader(object):
             if self.use_async_cuda:
                 # the queue to store processed cuda data, user will get data from it if use cuda
                 self.cuda_queue = queue.Queue(maxsize=1)
-                self.cuda_thread = threading.Thread(target=_cuda_loop, args=(
-                    self.cuda_queue, self.data_queue, self.device,),
-                                                      daemon=True)
+                self.cuda_thread = threading.Thread(target=_cuda_loop,
+                                                    args=(self.cuda_queue, self.data_queue, self.device),
+                                                    daemon=True)
                 self.cuda_thread.start()
             elif self.use_cuda:
                 self.stream = torch.cuda.Stream(device=self.device)
 
-    def __iter__(self) -> Iterable:
+    def __iter__(self) -> 'AsyncDataLoader':
         """
         Overview:
             Return the iterable self as an iterator
         Returns:
-            - self (:obj:`Iterable`): self as an iterator
+            - self (:obj:`AsyncDataLoader`): self as an iterator
         """
         return self
 
@@ -196,7 +198,7 @@ class AsyncDataLoader(object):
                 for i in range(len(data)):
                     data[i] = data[i]()
                 break
-            except:
+            except Exception:
                 pass
         data = self.collate_fn(data)
         if self.use_cuda:
@@ -236,4 +238,3 @@ class AsyncDataLoader(object):
                 return self.data_queue.get()
         else:
             return self.sync_loop()
-

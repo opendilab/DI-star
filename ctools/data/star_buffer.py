@@ -1,12 +1,13 @@
-from collections import deque
 import time
 import os
-from ctools.utils import remove_file
-import queue
 import threading
+from collections import deque
+from typing import Optional
 
-class StarBuffer(object):
-    def __init__(self, cfg, name):
+
+class StarBuffer:
+    def __init__(self, cfg: 'EasyDict', name: str):
+        # TODO(Local State) is `StarBuffer` possible? And this class might be implemented incompletely, like ReplayBuffer.
         self.name = name
         self.meta_maxlen = cfg.meta_maxlen
         self.min_sample_ratio = cfg.min_sample_ratio
@@ -27,7 +28,7 @@ class StarBuffer(object):
         if self.total_data_count < self.min_sample_ratio:
             self.total_data_count += 1
 
-    def sample(self, batch_size):
+    def sample(self, batch_size: int) -> Optional[list]:
         if self.total_data_count < self.min_sample_ratio:
             print(f'not enough data, required {self.min_sample_ratio} to begin, now has {self.total_data_count}!')
             return None
