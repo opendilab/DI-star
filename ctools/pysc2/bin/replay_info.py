@@ -14,15 +14,10 @@
 # limitations under the License.
 """Query one or more replays for information."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 
 from absl import app
 from absl import flags
-from future.builtins import str  # pylint: disable=redefined-builtin
 
 from ctools.pysc2 import run_configs
 from ctools.pysc2.lib import remote_controller

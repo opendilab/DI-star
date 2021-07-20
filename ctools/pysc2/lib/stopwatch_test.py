@@ -14,14 +14,9 @@
 # limitations under the License.
 """Tests for stopwatch."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 
 from absl.testing import absltest
-from future.builtins import range  # pylint: disable=redefined-builtin
 
 import mock
 from ctools.pysc2.lib import stopwatch

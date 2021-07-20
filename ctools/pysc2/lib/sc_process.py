@@ -13,10 +13,6 @@
 # limitations under the License.
 """Launch the game and set up communication."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from absl import logging
 import os
 import platform
@@ -27,7 +23,6 @@ import time
 import sys
 
 from absl import flags
-from future.builtins import range  # pylint: disable=redefined-builtin
 
 import portpicker
 from ctools.pysc2.lib import remote_controller

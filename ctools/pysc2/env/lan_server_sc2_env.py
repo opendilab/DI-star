@@ -14,10 +14,6 @@
 """A Starcraft II environment for playing LAN games agent vs agent
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from ctools.pysc2 import run_configs
 from ctools.pysc2.env import sc2_env
 from ctools.pysc2.lib import run_parallel

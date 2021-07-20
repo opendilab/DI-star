@@ -4,9 +4,6 @@ Usage: Run me on a computer with ctools.pysc2 environment with ladder map packs 
        The LOCALIZED_BNET_NAME_TO_ctools.pysc2_NAME_LUT can be used to convert any kind of map name to ctools.pysc2 name
        Output will be written to map_info.py
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 import os
 import re
 from absl import app

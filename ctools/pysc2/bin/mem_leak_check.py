@@ -14,10 +14,6 @@
 # limitations under the License.
 """Test for memory leaks."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 # pylint: disable=g-import-not-at-top
 
 import collections
@@ -27,7 +23,6 @@ import time
 
 from absl import app
 from absl import flags
-from future.builtins import range  # pylint: disable=redefined-builtin
 
 try:
   import psutil
