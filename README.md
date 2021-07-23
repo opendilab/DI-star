@@ -2,7 +2,6 @@
 ![wechat公众号](https://img.shields.io/badge/wechat公众号-OpenDILab20210708-green) <!-- # TODO： hyperlink jump (seems not possible) -->
 [![weibo](https://img.shields.io/badge/weibo-OpenDILab决策AI-green)](http://t.cn/A6fWCllb)
 [![email](https://img.shields.io/badge/Email-opendilab.contact@gmail.com-informational)](mailto:opendilab.contact@gmail.com)
-<script async defer src="https://slack.yourdomain.com/slackin.js"></script>
 
 # DI-star
 This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
