@@ -1,3 +1,8 @@
+[![qq](https://img.shields.io/badge/qq群-700157520-green)](mqqapi://card/show_pslcard?src_type=internal&version=1&uin=700157520&card_type=group&source=qrcode) <!-- # TODO：Only works on mobile version -->
+![wechat公众号](https://img.shields.io/badge/wechat公众号-OpenDILab20210708-green) <!-- # TODO： hyperlink jump (seems not possible) -->
+[![weibo](https://img.shields.io/badge/weibo-OpenDILab决策AI-green)](http://t.cn/A6fWCllb)
+[![email](https://img.shields.io/badge/Email-opendilab.contact@gmail.com-informational)](mailto:opendilab.contact@gmail.com)
+
 # DI-star
 This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
