@@ -1,11 +1,7 @@
 [![qq](https://img.shields.io/badge/qq群-700157520-green)](mqqapi://card/show_pslcard?src_type=internal&version=1&uin=700157520&card_type=group&source=qrcode) <!-- # TODO：Only works on mobile version -->
-
 ![wechat公众号](https://img.shields.io/badge/wechat公众号-OpenDILab20210708-green) <!-- # TODO： hyperlink jump (seems not possible) -->
-
 [![知乎](https://img.shields.io/badge/知乎-OpenDILab-green)](https://www.zhihu.com/people/opendilab)
-
 [![email](https://img.shields.io/badge/Email-opendilab.contact@gmail.com-informational)](mailto:opendilab.contact@gmail.com)
-
 [![slack](https://img.shields.io/badge/slack-OpenDILab-informational)](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
 
 # DI-star
