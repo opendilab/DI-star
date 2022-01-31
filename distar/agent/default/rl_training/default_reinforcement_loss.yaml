@@ -1,0 +1,68 @@
+learner:
+    fake_reward_prob: 1
+    loss_weights:
+        baseline:
+            winloss: 10.0 #10.0
+            build_order: 0.0
+            built_unit: 0.0
+            effect: 0.0
+            upgrade: 0.0
+            battle: 0.0
+        pg:
+            winloss: 1.0
+            build_order: 0.0
+            built_unit: 0.0
+            effect: 0.0
+            upgrade: 0.0
+            battle: 0.0
+        upgo:
+            winloss: 1.0
+        kl: 0.02
+        kl_su: 1
+        action_type_kl: 0.1
+        entropy: 0.0001
+    pg_head_weights:
+        action_type: 1.0
+        delay: 1.0
+        select_unit_num_logits: 1.0
+        selected_units: 0.01
+        target_unit: 1.0
+        target_location: 1.0
+    upgo_head_weights:
+        action_type: 1.0
+        delay: 1.0
+        select_unit_num_logits: 1.0
+        selected_units: 0.01
+        target_unit: 1.0
+        target_location: 1.0
+    entropy_head_weights:
+        action_type: 1.0
+        delay: 1.0
+        select_unit_num_logits: 1.0
+        selected_units: 0.01
+        target_unit: 1.0
+        target_location: 1.0
+    kl_head_weights:
+        action_type: 1.0
+        delay: 1.0
+        select_unit_num_logits: 1.0
+        selected_units: 0.01
+        target_unit: 1.0
+        target_location: 1.0
+    kl:
+        action_type_kl_steps: 2400
+    gammas:
+        baseline:
+            winloss: 1.0
+            build_order: 1.0
+            built_unit: 1.0
+            effect: 1.0
+            upgrade: 1.0
+            battle: 0.997
+        pg:
+            winloss: 1.0
+            build_order: 1.0
+            built_unit: 1.0
+            effect: 1.0
+            upgrade: 1.0
+            battle: 0.997

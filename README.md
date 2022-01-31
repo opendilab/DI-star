@@ -10,9 +10,9 @@ This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenD
 
 - [x] Play with trained agent
 
-- [ ] Supervised Learning
+- [x] Supervised Learning
 
-- [ ] Reinforcement Learning
+- [x] Reinforcement Learning
 
 
 ## Usage
@@ -90,6 +90,57 @@ It runs 2 StarCraftII instances both controlled by our RL Agent, specify other m
 python -m distar.bin.play --game_type agent_vs_bot
 ```
 RL agent plays against built-in elite bot.
+
+### Supervised Learning
+StarCraftII client is required for replay decoding, follow instructions above.
+```bash
+python -m distar.bin.sl_train --data <path>
+```
+*path* could be either a directory with replays or a file includes a replay path at each line.
+
+Optionally, separating replay decoding and model training could be more efficient, run the three scripts in different terminals:
+```bash
+python -m distar.bin.sl_train --type coordinator
+python -m distar.bin.sl_train --type learner --remote
+python -m distar.bin.sl_train --type replay_actor --data <path>
+```
+
+For distributed training:
+```bash
+python -m distar.bin.sl_train --init_method <init_method> --rank <rank> --world_size <world_size>
+or
+python -m distar.bin.sl_train --type coordinator
+python -m distar.bin.sl_train --type learner --remote --init_method <init_method> --rank <rank> --world_size <world_size>
+python -m distar.bin.sl_train --type replay_actor --data <path>
+```
+
+### Reinforcement Learning
+Reinforcement learning will use supervised model as initial model, please download it first, StarCraftII client is also required.
+
+##### 1. Training against bots in StarCraftII: 
+```bash
+python -m disatr.bin.rl_train
+```
+
+##### 2. Training with self-play
+```bash
+python -m disatr.bin.rl_train --task selfplay
+```
+
+Four components are used for RL training, just like SL training, they can be running through different process:
+```bash
+python -m distar.bin.rl_train --type league --task selfplay
+python -m distar.bin.rl_train --type coordinator
+python -m distar.bin.rl_train --type learner
+python -m distar.bin.rl_train --type actor
+```
+
+Distributed training is also supported like SL training.
+
+### Training Tips
+More configuration(e.g. batch size, learning rate, etc.)  could be found at `distar/bin/user_config.yaml`.
+
+Training guide and baselines will be added soon. 
 
 ## Citation
 ```latex

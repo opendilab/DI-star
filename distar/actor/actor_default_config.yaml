@@ -1,0 +1,38 @@
+common:
+  experiment_name: 'test'
+agent:
+  z_path: 'kairos_z.json'
+feature:
+  beginning_order_prob: 1.
+  cumulative_stat_prob: 1.
+  bo_zergling_num: 8
+actor:
+  job_type: 'eval_test' # ['train', 'eval', 'train_test', 'eval_test']
+  gpu_batch_inference: False
+  env_num: 1
+  episode_num: 1
+  print_freq: 10
+  traj_len: 2
+  use_cuda: False
+  fake_model: False # if True, skip model loading
+  player_ids: ['haha']
+  agents:
+    haha: 'default'
+  model_paths:
+    haha: 'D:\remote\fix_game_loop_iteration_50000.pth.tar'
+  teacher_player_ids: ['haha', 'haha']
+  teacher_model_paths:
+    haha: 'haha.pth.tar'
+env:
+  map_name: 'KairosJunction'
+  player_ids: ['agent', 'bot7']
+  races: ['zerg', 'zerg']
+  map_size_resolutions: [True, True] # if True, ignore minimap_resolutions
+  minimap_resolutions: [[160, 152], [160, 152]]
+  realtime: False
+  replay_dir: '.'
+  random_seed: 'none'
+  game_steps_per_episode: 100000
+  update_bot_obs: False
+  save_replay_episodes: 1
+

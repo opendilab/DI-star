@@ -17,11 +17,11 @@ from setuptools import setup
 
 description = """distar - StarCraft II Learning Environment
 
-Part1 ctools.pysc2:
+Part1 distar.ctools.pysc2:
 ctools.pysc2 is DeepMind's Python component of the StarCraft II Learning Environment
 (SC2LE). It exposes Blizzard Entertainment's StarCraft II Machine Learning API
 as a Python RL Environment. This is a collaboration between DeepMind and
-Blizzard to develop StarCraft II into a rich environment for RL research. ctools.pysc2
+Blizzard to develop StarCraft II into a rich environment for RL research. distar.ctools.pysc2
 provides an interface for RL agents to interact with StarCraft 2, getting
 observations and sending actions.
 
@@ -45,27 +45,25 @@ setup(
     license='Apache License, Version 2.0',
     keywords='StarCraft AI',
     packages=[
-        'ctools.pysc2',
-        'ctools.pysc2.agents',
-        'ctools.pysc2.bin',
-        'ctools.pysc2.env',
-        'ctools.pysc2.lib',
-        'ctools.pysc2.maps',
-        'ctools.pysc2.run_configs',
-        'ctools.pysc2.tests',
+        'distar.pysc2',
+        'distar.pysc2.agents',
+        'distar.pysc2.bin',
+        'distar.pysc2.env',
+        'distar.pysc2.lib',
+        'distar.pysc2.maps',
+        'distar.pysc2.run_configs',
+        'distar.pysc2.tests',
+        'distar.actor',
         'distar',
+        'distar.agent',
         'distar.bin',
-        'distar.model',
+        'distar.bin',
         'distar.envs',
-        'distar.computation_graph',
-        'distar.worker',
-        'distar.data',
-        'ctools',
-        'ctools.envs',
-        'ctools.torch_utils',
-        'ctools.utils',
-        'ctools.worker',
-        'ctools.model'
+        'distar.ctools',
+        'distar.ctools.data',
+        'distar.ctools.torch_utils',
+        'distar.ctools.utils',
+        'distar.ctools.worker'
     ],
     install_requires=[
         'absl-py>=0.1.0',
@@ -95,6 +93,8 @@ setup(
         'yapf==0.29.0',
         'flask',
         'lz4',
+        'sc2reader',
+        'pyarrow',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

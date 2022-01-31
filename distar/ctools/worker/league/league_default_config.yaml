@@ -1,0 +1,67 @@
+league:
+    use_historical_players: True
+    fake_model: False
+    resume_path: '' #'/mnt/cache/zhouhang2/repo/sensewow/sensewow/entry/as_rl_baseline/api-log/league.resume.2021-05-25-05-02-32'
+    vs_bot: False
+    eval_bot: False
+    bot_probs: [0, 0, 0, 0.2, 0.2, 0.3, 0.3]
+    pfsp_train_bot: False
+    save_initial_snapshot: True
+    snap_more: False
+    branch_probs:
+      MainPlayer:
+        sp: 0.5
+        corp_sp: 0.2
+        team_sp: 0.3
+        pfsp: 0.5
+        corp_pfsp: 0.5
+      ExploiterPlayer:
+        pfsp: 1
+      MainExploiterPlayer:
+        vs_main: 0.3
+        pfsp: 0.5
+        eval: 0.2
+      eval:
+        less_eval: 0.3
+        eval: 0.7
+      ladder:
+        less_eval: 0.9
+        eval: 0.1
+    simulate_freq: 100
+    active_players:
+      checkpoint_path: [ 'pretrain.pth.tar' ]
+      player_id: [ 'MP0' ]
+      pipeline: [ 'main' ]
+      frac_id: [ 0 ]
+      teacher_id: [ 'pretrain.pth.tar' ]
+      teacher_path: [ 'pretrain.pth.tar' ]
+      z_path: [ 'refactor_100Z.json' ]
+      one_phase_step: [1e12]
+    historical_players:
+        checkpoint_path: ['pretrain.pth.tar',]
+        pipeline: ['main']
+        frac_id: [0]
+        z_path: ['refactor_100Z.json',]
+    print_freq: 100
+    eval_winrate_before_train: False
+    fix_start_location: False
+    stat_decay: 0.995
+    stat_warm_up_size: 1000
+    payoff_min_win_rate_games: 1000
+    ladder_min_games: 200
+    ladder_enough_games: 200
+    eval_min_games: 200
+    show_job: False # for debug use, if true, will print job_info when league give job
+    show_branch: False  # for debug use, if true, will print branch when league give job
+    active_payoff_log: True # determine whether to print payoff log for active player
+    active_opponent_payoff_log: False # determine whether to print payoff log for active player
+    active_teammate_payoff_log: False # determine whether to print payoff log for active player
+    active_dist_log: True # determine whether to print dist log for active player
+    active_cum_log: False # determine whether to print cum log for active player
+    active_unit_num_log: True # determine whether to print unit_num log for active player
+    hist_payoff_log: False # determine whether to print payoff log for hist player
+    hist_opponent_payoff_log: False # determine whether to print payoff log for active player
+    hist_teammate_payoff_log: False
+    hist_dist_log: False # determine whether to print dist log for hist player
+    hist_unit_num_log: False # determine whether to print unit_num log for hist player
+    hist_cum_log: False # determine whether to print cum log for hist player

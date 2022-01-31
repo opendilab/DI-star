@@ -1,0 +1,56 @@
+common:
+    experiment_name: 'test'
+learner:
+    load_path: ''
+    use_cuda: True
+    use_distributed: False
+    use_auxiliary_feature: False
+    max_iterations: 100000000
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    lr_decay: 1.
+    lr_decay_interval: 100000
+    data:
+        batch_size: 1
+        trajectory_length: 64
+    grad_clip:
+        type: 'none'
+        threshold: 1.4
+    hook:
+        lr_scheduler:
+            name: lr_scheduler
+            type: lr_scheduler
+            priority: 20  # lower value means higher priority
+            position: after_iter 
+        log_reduce:
+            name: log_reduce
+            type: log_reduce
+            priority: 1
+            position: after_iter
+            ext_args:
+                freq: 1
+        load_ckpt:
+            name: load_ckpt
+            type: load_ckpt
+            priority: 20
+            position: before_run
+        save_ckpt_after_iter:
+            name: save_ckpt_after_iter
+            type: save_ckpt
+            priority: 40
+            position: after_iter
+            ext_args:
+                freq: 200
+        save_ckpt_after_run:
+            name: save_ckpt_after_run
+            type: save_ckpt
+            priority: 20
+            position: after_run
+        log_show:
+            name: log_show
+            type: log_show
+            priority: 20
+            position: after_iter
+            ext_args:
+                freq: 10
+

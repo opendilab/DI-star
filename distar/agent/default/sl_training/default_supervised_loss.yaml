@@ -1,0 +1,10 @@
+learner:
+    loss_weight:
+        action_type: 30.0 #30.0
+        delay: 9.0
+        queued: 1.0
+        selected_units: 4.0
+        select_unit_num_logits: 8.0
+        target_unit: 4.0
+        target_location: 8.0
+    su_mask: True
