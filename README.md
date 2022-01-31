@@ -1,18 +1,15 @@
-[![qq](https://img.shields.io/badge/qq群-700157520-green)](mqqapi://card/show_pslcard?src_type=internal&version=1&uin=700157520&card_type=group&source=qrcode) <!-- # TODO：Only works on mobile version -->
-![wechat公众号](https://img.shields.io/badge/wechat公众号-OpenDILab20210708-green) <!-- # TODO： hyperlink jump (seems not possible) -->
-[![知乎](https://img.shields.io/badge/知乎-OpenDILab-green)](https://www.zhihu.com/people/opendilab)
-[![email](https://img.shields.io/badge/Email-opendilab.contact@gmail.com-informational)](mailto:opendilab.contact@gmail.com)
-[![slack](https://img.shields.io/badge/slack-OpenDILab-informational)](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
-
 # DI-star
-
 This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
-- [x] Play with trained agent
+- [x] Play demo and test code (try and play with our agent!)
 
-- [x] Supervised Learning
+- [x] First version of pre-trained SL and RL agent
 
-- [x] Reinforcement Learning
+- [x] Training code of Supervised Learning *(New! updated by 2022-01-31)*
+
+- [x] Training code of Reinforcement Learning with self-play and league *(New! updated by 2022-01-31)*
+
+- [ ] Professional version of pre-trained RL agent *(WIP)*
 
 
 ## Usage
@@ -57,7 +54,7 @@ Pytorch Version 1.7.1 and CUDA is recommended, Follow instructions from [pytorch
 **Note: GPU is neccessary for decent performance in realtime agent test, you can also use pytorch without cuda, but no performance guaranteed due to inference latency on cpu.
 Make sure you set SC2 at lowest picture quality before testing.**
 
-### Play
+### Play with pretrained agent
 
 #### 1. Download models:
 ```bash
@@ -91,6 +88,8 @@ python -m distar.bin.play --game_type agent_vs_bot
 ```
 RL agent plays against built-in elite bot.
 
+
+## Training your own agent with our framework
 ### Supervised Learning
 StarCraftII client is required for replay decoding, follow instructions above.
 ```bash
@@ -127,7 +126,7 @@ python -m disatr.bin.rl_train
 python -m disatr.bin.rl_train --task selfplay
 ```
 
-Four components are used for RL training, just like SL training, they can be running through different process:
+Four components are used for RL training, just like SL training, they can be executed through different process:
 ```bash
 python -m distar.bin.rl_train --type league --task selfplay
 python -m distar.bin.rl_train --type coordinator
@@ -145,7 +144,7 @@ Training guide and baselines will be added soon.
 ## Citation
 ```latex
 @misc{distar,
-    title={{DI-star: OpenDILab} Decision Intelligence in StarCraftII},
+    title={DI-star: An Open-sourse Reinforcement Learning Framework for StarCraftII},
     author={DI-star Contributors},
     publisher = {GitHub},
     howpublished = {\url{https://github.com/opendilab/DI-star}},
