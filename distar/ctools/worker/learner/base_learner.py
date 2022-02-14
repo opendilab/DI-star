@@ -168,7 +168,7 @@ class BaseLearner(ABC):
         # warm_up_with_cosine_lr
         if self._whole_cfg.learner.use_warmup:
             import math
-            warm_up_with_cosine_lr = lambda step: step / self._whole_cfg.learner.warm_up_steps if step <= self._whole_cfg.learner.warm_up_steps else 0.5 * (math.cos((step - self._whole_cfg.learner.warm_up_steps) /(self._whole_cfg.steps - self._whole_cfg.learner.warm_up_steps) * math.pi) + 1)
+            warm_up_with_cosine_lr = lambda step: step / self._whole_cfg.learner.warm_up_steps if step <= self._whole_cfg.learner.warm_up_steps else 0.5 * (math.cos((step - self._whole_cfg.learner.warm_up_steps) /(self._whole_cfg.learner.steps - self._whole_cfg.learner.warm_up_steps) * math.pi) + 1)
             self._lr_scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=warm_up_with_cosine_lr)
         else:
             self._lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(self._optimizer, milestones=list(range(0, lr_decay_interval * 20, lr_decay_interval))[1:], gamma=lr_decay)
