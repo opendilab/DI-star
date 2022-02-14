@@ -36,7 +36,7 @@ if __name__ == '__main__':
         if config.learner.use_distributed:
             learner = SLLearner(config, "torch", args.init_method, args.rank, args.world_size)
         else:
-            config.use_warmup = True
+            config.learner.use_warmup = True
             learner = SLLearner(config, "single_node")
         learner.run()
     elif args.type == 'coordinator':
