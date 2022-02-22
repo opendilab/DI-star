@@ -377,9 +377,9 @@ class RemoteController(object):
 
     @decorate_check_error(sc_pb.ResponseReplayInfo.Error)
     @sw.decorate
-    def replay_info(self, replay_data):
+    def replay_info(self, replay_path):
         return self._client.send(replay_info=sc_pb.RequestReplayInfo(
-            replay_data=replay_data))
+            replay_path=replay_path))
 
     @property
     def status(self):

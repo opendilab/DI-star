@@ -232,7 +232,7 @@ class ReplayDecoder:
         size.assign_to(self._interface.feature_layer.minimap_resolution)
         self._controller.start_replay(
             sc_pb.RequestStartReplay(
-                replay_data=self._replay_data,
+                replay_path=self._replay_path,
                 options=self._interface,
                 observed_player_id=player,
             )
@@ -272,7 +272,7 @@ class ReplayDecoder:
         size.assign_to(self._interface.feature_layer.minimap_resolution)
         self._controller.start_replay(
             sc_pb.RequestStartReplay(
-                replay_data=self._replay_data, options=self._interface, observed_player_id=player, disable_fog=False
+                replay_path=self._replay_path, options=self._interface, observed_player_id=player, disable_fog=False
             )
         )
         raw_ob = self._controller.observe()
@@ -340,7 +340,7 @@ class ReplayDecoder:
         return traj_data
 
     def _parse_replay_info(self):
-        replay_info = self._controller.replay_info(self._replay_data)
+        replay_info = self._controller.replay_info(replay_path=self._replay_path)
         ret = dict()
         ret['race'] = [RACE_DICT[p.player_info.race_actual] for p in replay_info.player_info]
         ret['result'] = [RESULT_DICT[p.player_result.result] for p in replay_info.player_info]
@@ -375,7 +375,8 @@ class ReplayDecoder:
                     self._version = None
                     self._restart_count = 0
                     return None
-            self._replay_data = self._run_config.replay_data(replay_path)
+            # self._replay_data = self._run_config.replay_data(replay_path)
+            self._replay_path = replay_path
             self._replay_info = self._parse_replay_info()
             if self._replay_info['player_type'][player_index] == 2:  # Computer
                 return None
