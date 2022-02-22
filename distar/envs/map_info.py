@@ -91,18 +91,18 @@ MAPS = {
         'Neon Violet Square LE', 'NeonVioletSquareLE', 'NeonVioletSquareLE'
     ),
     '16Bit': (
-        '16-Bit LE', 'Ladder2018Season2\\16-BitLE.SC2Map', [140, 156], [160, 184], '16位-天梯版', '16位-天梯版', '16-BitLE'
+        '16-Bit LE', 'Ladder2018Season2\\16-BitLE.SC2Map', [140, 156], [160, 184], '16位 - 天梯版', '16位-天梯版', '16-BitLE'
     ),
     'Catalyst': (
         'Catalyst LE', 'Ladder2018Season2\\CatalystLE.SC2Map', [136, 144], [184,
                                                                             184], '汇龙岛 - 天梯版', '汇龙岛-天梯版', 'CatalystLE'
     ),
     'DarknessSanctuary': (
-        'Darkness Sanctuary LE', 'Ladder2018Season2\\DarknessSanctuaryLE.SC2Map', [164, 164], [176, 176], '黑暗避难所-天梯版',
+        'Darkness Sanctuary LE', 'Ladder2018Season2\\DarknessSanctuaryLE.SC2Map', [164, 164], [176, 176], '黑暗避难所 - 天梯版',
         '黑暗避难所-天梯版', 'DarknessSanctuaryLE'
     ),
     'Redshift': (
-        'Redshift LE', 'Ladder2018Season2\\RedshiftLE.SC2Map', [124, 152], [152, 184], '红移-天梯版', '红移-天梯版', 'RedshiftLE'
+        'Redshift LE', 'Ladder2018Season2\\RedshiftLE.SC2Map', [124, 152], [152, 184], '红移 - 天梯版', '红移-天梯版', 'RedshiftLE'
     ),
     'AcidPlant': (
         'Acid Plant LE', 'Ladder2018Season3\\AcidPlantLE.SC2Map', [148,
@@ -110,28 +110,28 @@ MAPS = {
                                                                           184], '强酸工厂 - 天梯版', '强酸工厂-天梯版', 'AcidPlantLE'
     ),
     'Dreamcatcher': (
-        'Dreamcatcher LE', 'Ladder2018Season3\\DreamcatcherLE.SC2Map', [136, 136], [168, 176], '逐梦之地-天梯版', '逐梦之地-天梯版',
+        'Dreamcatcher LE', 'Ladder2018Season3\\DreamcatcherLE.SC2Map', [136, 136], [168, 176], '逐梦之地 - 天梯版', '逐梦之地-天梯版',
         'DreamcatcherLE'
     ),
     'Fracture': (
         'Fracture LE', 'Ladder2018Season3\\FractureLE.SC2Map', [144, 124], [224,
-                                                                            184], '冰棱裂境-天梯版', '冰棱裂境-天梯版', 'FractureLE'
+                                                                            184], '冰棱裂境 - 天梯版', '冰棱裂境-天梯版', 'FractureLE'
     ),
     'LostandFound': (
-        'Lost and Found LE', 'Ladder2018Season3\\LostandFoundLE.SC2Map', [144, 128], [168, 168], '失而复得-天梯版', '失而复得-天梯版',
+        'Lost and Found LE', 'Ladder2018Season3\\LostandFoundLE.SC2Map', [144, 128], [168, 168], '失而复得 - 天梯版', '失而复得-天梯版',
         'LostandFoundLE'
     ),
     'Blueshift': (
         'Blueshift LE', 'Ladder2018Season4\\BlueshiftLE.SC2Map', [136, 136], [176,
-                                                                              184], '蓝移-天梯版', '蓝移-天梯版', 'BlueshiftLE'
+                                                                              184], '蓝移 - 天梯版', '蓝移-天梯版', 'BlueshiftLE'
     ),
     'CeruleanFall': (
-        'Cerulean Fall LE', 'Ladder2018Season4\\CeruleanFallLE.SC2Map', [148, 136], [168, 160], '缀蓝秋原-天梯版', '缀蓝秋原-天梯版',
+        'Cerulean Fall LE', 'Ladder2018Season4\\CeruleanFallLE.SC2Map', [148, 136], [168, 160], '缀蓝秋原 - 天梯版', '缀蓝秋原-天梯版',
         'CeruleanFallLE'
     ),
     'ParaSite': (
         'Para Site LE', 'Ladder2018Season4\\ParaSiteLE.SC2Map', [140, 152], [176,
-                                                                             184], '地龙岛-天梯版', '地龙岛-天梯版', 'ParaSiteLE'
+                                                                             184], '地龙岛 - 天梯版', '地龙岛-天梯版', 'ParaSiteLE'
     ),
     'Stasis': (
         'Stasis LE', 'Ladder2018Season4\\StasisLE.SC2Map', [152, 128], [168, 144], '静滞区 - 天梯版', '静滞区-天梯版', 'StasisLE'
@@ -147,27 +147,27 @@ MAPS = {
     ),
     'YearZero': (
         'Year Zero LE', 'Ladder2019Season1\\YearZeroLE.SC2Map', [166, 128], [216,
-                                                                             192], '零纪元-天梯版', '零纪元-天梯版', 'YearZeroLE'
+                                                                             192], '零纪元 - 天梯版', '零纪元-天梯版', 'YearZeroLE'
     ),
     'CyberForest': (
-        'Cyber Forest LE', 'Ladder2019Season2\\CyberForestLE.SC2Map', [128, 148], [168, 184], '赛博森林-天梯版', '赛博森林-天梯版',
+        'Cyber Forest LE', 'Ladder2019Season2\\CyberForestLE.SC2Map', [128, 148], [168, 184], '赛博森林 - 天梯版', '赛博森林-天梯版',
         'CyberForestLE'
     ),
     'KairosJunction': (
-        'Kairos Junction LE', 'Ladder2019Season2\\KairosJunctionLE.SC2Map', [120, 140], [152, 168], '凯罗斯中转站-天梯版',
+        'Kairos Junction LE', 'Ladder2019Season2\\KairosJunctionLE.SC2Map', [120, 140], [152, 168], '凯罗斯中转站 - 天梯版',
         '凯罗斯中转站-天梯版', 'KairosJunctionLE'
     ),
     'KingsCove': (
         "King's Cove LE", 'Ladder2019Season2\\KingsCoveLE.SC2Map', [152,
                                                                     148], [176,
-                                                                           176], '国王藏宝地-天梯版', '国王藏宝地-天梯版', 'KingsCoveLE'
+                                                                           176], '国王藏宝地 - 天梯版', '国王藏宝地-天梯版', 'KingsCoveLE'
     ),
     'NewRepugnancy': (
-        'New Repugnancy LE', 'Ladder2019Season2\\NewRepugnancyLE.SC2Map', [152, 120], [184, 144], '宿怨战场-天梯版',
+        'New Repugnancy LE', 'Ladder2019Season2\\NewRepugnancyLE.SC2Map', [152, 120], [184, 144], '宿怨战场 - 天梯版',
         '宿怨战场-天梯版', 'NewRepugnancyLE'
     ),
     'TurboCruise84': (
-        "Turbo Cruise '84 LE", 'Ladder2019Season2\\TurboCruise84LE.SC2Map', [140, 116], [192, 176], '涡轮巡飞城-天梯版',
+        "Turbo Cruise '84 LE", 'Ladder2019Season2\\TurboCruise84LE.SC2Map', [140, 116], [192, 176], '涡轮巡飞城 - 天梯版',
         '涡轮巡飞城-天梯版', 'TurboCruise84LE'
     ),
     'Acropolis': (
