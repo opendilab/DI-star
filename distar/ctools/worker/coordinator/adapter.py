@@ -65,8 +65,15 @@ class Adapter(object):
 
     def push(self, data, token='default', fs_type='torch', compress=True, worker_num=None):
         if not hasattr(self, '_push_thread'):
-            self._ip = socket.gethostbyname(socket.gethostname())
-            self._ip = '127.0.0.1'
+            def get_host_ip(): 
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    s.connect((self._coordinator_ip, self._coordinator_port))
+                    ip = s.getsockname()[0]
+                finally:
+                    s.close()
+                return ip
+            self._ip = get_host_ip()
             self._push_thread = threading.Thread(target=self._push_loop, daemon=True)
             self._push_thread.start()
 
