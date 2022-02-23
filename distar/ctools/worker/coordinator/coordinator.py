@@ -127,8 +127,9 @@ class Coordinator(object):
                         server_list.remove(s)
                         self._remove_count.pop(key)
 
-    def deal_with_push(self, request_info):
+    def deal_with_push(self, request_info, request_ip):
         token = request_info.pop('token')
+        request_info['user_ip'] = request_ip
         self._buffer[token].append(request_info)
         print(f'push to token: {token}, buffer size: {len(self._buffer[token])}, request info: {request_info}')
         return True
@@ -188,7 +189,7 @@ def create_coordinator_app(coordinator: Coordinator):
 
     @app.route('/coordinator/push', methods=['POST'])
     def push():
-        ret_info = coordinator.deal_with_push(request.json)
+        ret_info = coordinator.deal_with_push(request.json, request.remote_addr)
         if ret_info:
             return build_ret(0)
         else:
