@@ -380,6 +380,8 @@ class ReplayDecoder:
             self._replay_info = self._parse_replay_info()
             if self._replay_info['player_type'][player_index] == 2:  # Computer
                 return None
+            if self._replay_info['race'][self._player_index][0].upper() not in self._parse_race:
+                return None
             self._map_size = get_map_size(self._replay_info['map_name'])
             self._restart_count += 1
             start_time = time.time()
