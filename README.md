@@ -117,7 +117,7 @@ Here is an example of training on a machine with 4 GPUs in remote mode:
 # Run the following scripts in different terminals (windows).
 python -m distar.bin.sl_train --type coordinator
 # Assume 4 GPUs are on the same machine. 
-# If your GPUs are on the different machines, you need to configure the init_mehod's IP for each machine.
+# If your GPUs are on different machines, you need to configure the init_mehod's IP for each machine.
 python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 0 --world_size 4
 python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 1 --world_size 4
 python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 2 --world_size 4
