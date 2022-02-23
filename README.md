@@ -112,7 +112,18 @@ python -m distar.bin.sl_train --type coordinator
 python -m distar.bin.sl_train --type learner --remote --init_method <init_method> --rank <rank> --world_size <world_size>
 python -m distar.bin.sl_train --type replay_actor --data <path>
 ```
-
+Here is an example of training on a machine with 4 GPUs in remote mode:
+```bash
+# Run the following scripts in different terminals (windows).
+python -m distar.bin.sl_train --type coordinator
+# Assume 4 GPUs are on the same machine. 
+# If your GPUs are on the different machines, you need to configure the init_mehod's IP for each machine.
+python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 0 --world_size 4
+python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 1 --world_size 4
+python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 2 --world_size 4
+python -m distar.bin.sl_train --type learner --remote --init_method tcp://127.0.0.1 --rank 3 --world_size 4
+python -m distar.bin.sl_train --type replay_actor --data <path>
+```
 ### Reinforcement Learning
 Reinforcement learning will use supervised model as initial model, please download it first, StarCraftII client is also required.
 
