@@ -36,20 +36,21 @@ def send_data(worker_queue, main_traj_pipes_c, worker_index, data, shared_step_d
                         shared_step_data[k][data_idx].copy_(step_data[k])
                     elif isinstance(v, dict):
                         for _k, _v in v.items():
-                            if k == 'action_info' and _k == 'selected_units':
-                                if selected_units_num > 0:
-                                    shared_step_data[k][_k][data_idx, :selected_units_num].copy_(step_data[k][_k])
-                            elif k == 'entity_info':
-                                shared_step_data[k][_k][data_idx, :entity_num].copy_(step_data[k][_k])
-                            elif k == 'spatial_info':
-                                if 'effect' in _k:
-                                    shared_step_data[k][_k][data_idx].copy_(step_data[k][_k])
+                            if _k in shared_step_data[k].keys():
+                                if k == 'action_info' and _k == 'selected_units':
+                                    if selected_units_num > 0:
+                                        shared_step_data[k][_k][data_idx, :selected_units_num].copy_(step_data[k][_k])
+                                elif k == 'entity_info':
+                                    shared_step_data[k][_k][data_idx, :entity_num].copy_(step_data[k][_k])
+                                elif k == 'spatial_info':
+                                    if 'effect' in _k:
+                                        shared_step_data[k][_k][data_idx].copy_(step_data[k][_k])
+                                    else:
+                                        h, w = step_data[k][_k].shape
+                                        shared_step_data[k][_k][data_idx] *= 0
+                                        shared_step_data[k][_k][data_idx, :h, :w].copy_(step_data[k][_k])
                                 else:
-                                    h, w = step_data[k][_k].shape
-                                    shared_step_data[k][_k][data_idx] *= 0
-                                    shared_step_data[k][_k][data_idx, :h, :w].copy_(step_data[k][_k])
-                            else:
-                                shared_step_data[k][_k][data_idx].copy_(step_data[k][_k])
+                                    shared_step_data[k][_k][data_idx].copy_(step_data[k][_k])
 
             # mask
             for i in range(end, start + trajectory_length):
