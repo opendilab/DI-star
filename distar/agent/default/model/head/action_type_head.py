@@ -39,7 +39,10 @@ class ActionTypeHead(nn.Module):
         self.glu1 = build_activation('glu')(self.cfg.action_map_dim, self.cfg.gate_dim, self.cfg.context_dim)
         self.glu2 = build_activation('glu')(self.cfg.input_dim, self.cfg.gate_dim, self.cfg.context_dim)
         self.action_num = self.cfg.action_num
-        self.use_mask = self.cfg.use_mask
+        if self.whole_cfg.common.type == 'play':
+            self.use_mask = True
+        else:
+            self.use_mask = False
         self.race = 'zerg'
 
     def forward(self, lstm_output, scalar_context, action_type: Optional[torch.Tensor] = None) -> Tuple[Tensor, Tensor, Tensor]:
@@ -47,8 +50,9 @@ class ActionTypeHead(nn.Module):
         x = self.res(x)
         x = self.action_fc(x, scalar_context)
         x.div_(self.whole_cfg.model.temperature)
-        mask = ACTION_RACE_MASK[self.race].to(x.device)
-        x = x.masked_fill(~mask.unsqueeze(dim=0), -1e9)
+        if self.use_mask:
+            mask = ACTION_RACE_MASK[self.race].to(x.device)
+            x = x.masked_fill(~mask.unsqueeze(dim=0), -1e9)
         if action_type is None:
             p = F.softmax(x, dim=1)
             action_type = torch.multinomial(p, 1)[:, 0]

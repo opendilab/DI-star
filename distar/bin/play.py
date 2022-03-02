@@ -38,6 +38,7 @@ if __name__ == '__main__':
 
     user_config = read_config(os.path.join(os.path.dirname(__file__), 'user_config.yaml'))
     user_config.actor.job_type = 'eval_test'
+    user_config.common.type = 'play'
     user_config.env.realtime = True
     args = get_args()
     default_model_path = os.path.join(os.path.dirname(__file__), 'rl_model.pth')

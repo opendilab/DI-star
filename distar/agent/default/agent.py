@@ -184,8 +184,28 @@ class Agent:
         else:
             with open(self._z_path, 'r') as f:
                 z_data = json.load(f)
-        self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop = random.choice(
-            z_data[self._map_name][self._race][born_location_str])
+        z = random.choice(z_data[self._map_name][self._race][born_location_str])
+        if len(z) == 4:
+            self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop = z
+            if random.random() < self._fake_reward_prob:
+                self.use_bo_reward = True
+            else:
+                self.use_bo_reward = False
+
+            if random.random() < self._fake_reward_prob:
+                self.use_cum_reward = True
+            else:
+                self.use_cum_reward = False
+        else:
+            self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop, z_type = z
+            self.use_cum_reward = False
+            self.use_bo_reward = False
+            if (z_type == 0 or z_type == 1) and random.random() < self._fake_reward_prob:
+                self.use_cum_reward = True
+            if (z_type == 0 or z_type == 2) and random.random() < self._fake_reward_prob:
+                self.use_bo_reward = True
+            print('z_type', z_type, 'cum', self.use_cum_reward, 'bo', self.use_bo_reward)
+
         if self._whole_cfg.agent.get('show_Z', False):
             s = 'Map: {} Race: {}, Born location: ({}, {}), loop: {}\n'.format(map_name, race, born_location[0], born_location[1], self._target_z_loop)
             s += 'Building order:\n'
@@ -218,17 +238,6 @@ class Agent:
             self._total_bo_reward = torch.zeros(size=(), dtype=torch.float)
             self._total_cum_reward = torch.zeros(size=(), dtype=torch.float)
 
-        p = random.random()
-        if p < self._fake_reward_prob:
-            self.use_bo_reward = True
-        else:
-            self.use_bo_reward = False
-
-        p = random.random()
-        if p < self._fake_reward_prob:
-            self.use_cum_reward = True
-        else:
-            self.use_cum_reward = False
 
     def _pre_process(self, obs):
         if self._use_value_feature:

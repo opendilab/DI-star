@@ -19,7 +19,7 @@ agent:
   show_Z: False
   zero_z_exceed_loop: True
   extra_units: True
-  fake_reward_prob: 1.
+  fake_reward_prob: 0.5
   clip_bo: False
 feature:
   filter_spine: True
@@ -135,6 +135,7 @@ learner:
 model:
   enable_baselines: ['winloss']
   entity_reduce_type: 'selected_units_num'
+  temperature: 0.8
   policy:
     head:
       location_head:
@@ -162,7 +163,7 @@ actor:
   teacher_model_paths:
     haha: 'haha.pth.tar'
 env:
-  map_name: 'KingsCove'
+  map_name: 'random'
   player_ids: ['agent1', 'bot10']
   races: ['zerg', 'zerg']
   map_size_resolutions: [True, True] # if True, ignore minimap_resolutions

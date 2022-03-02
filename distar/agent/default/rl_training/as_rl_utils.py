@@ -12,7 +12,7 @@ def policy_gradient_loss(baseline_value, reward, target_action_log_probs_dict, c
 
         with torch.no_grad():
             # rho = target_prob / behaviour_prob
-            advantages = vtrace_advantages(clipped_rhos, clipped_rhos, reward, baseline_value, gamma, lambda_=0.8)
+            advantages = vtrace_advantages(clipped_rhos, clipped_rhos, reward, baseline_value, gammas=gamma, lambda_=1.0)
         if head_type in ['action_type','delay']:
             policy_gradient_loss = - advantages * target_action_log_probs
         else:
