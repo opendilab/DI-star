@@ -91,7 +91,7 @@ class Agent:
         self._whole_cfg = cfg
         self._job_type = cfg.actor.job_type
         self._only_cum_action_kl = self._whole_cfg.get('learner', {}).get('only_cum_action_kl',False)
-        self._z_path = os.path.join(os.path.dirname(__file__), 'lib', self._whole_cfg.agent.z_path)
+        self._z_path = self._whole_cfg.agent.z_path
         self._bo_norm = self._whole_cfg.get('learner', {}).get('bo_norm',20)
         self._cum_norm = self._whole_cfg.get('learner', {}).get('cum_norm',30)
         self._battle_norm = self._whole_cfg.get('learner', {}).get('battle_norm',30)
@@ -109,6 +109,7 @@ class Agent:
         self._cum_type = self._whole_cfg.agent.get('cum_type', 'action')  # observation or action
         self._env_id = env_id
         self._gpu_batch_inference = self._whole_cfg.actor.get('gpu_batch_inference', False)
+        self.z_idx = None
         if self._whole_cfg.env.realtime:
             data = fake_step_data(share_memory=True, batch_size=1, hidden_size=self._hidden_size,
                                                hidden_layer=self._num_layers, train=False)
@@ -117,8 +118,6 @@ class Agent:
                 self.model = self.model.cuda()
             with torch.no_grad():
                 _ = self.model.compute_logp_action(**data)
-            with open(self._z_path, 'r') as f:
-                self._z_data = json.load(f)
         if self._gpu_batch_inference:
             batch_size = self._whole_cfg.actor.env_num
             self._shared_input = fake_step_data(share_memory=True, batch_size=batch_size, hidden_size=self._hidden_size,
@@ -179,35 +178,36 @@ class Agent:
         born_location[0] = int(born_location[0])
         born_location[1] = int(self._feature.map_size.y - born_location[1])
         born_location_str = str(born_location[0] + born_location[1] * 160)
-        if self._whole_cfg.env.realtime:
+        self._z_path = os.path.join(os.path.dirname(__file__), 'lib', self._z_path)
+        with open(self._z_path, 'r') as f:
+            self._z_data = json.load(f)
             z_data = self._z_data
+        z_type = None
+        idx = None
+        if self.z_idx is not None:
+            idx, z_type = random.choice(self.z_idx[self._map_name][self._race][born_location_str])
+            z = z_data[self._map_name][self._race][born_location_str][idx]
         else:
-            with open(self._z_path, 'r') as f:
-                z_data = json.load(f)
-        z = random.choice(z_data[self._map_name][self._race][born_location_str])
-        if len(z) == 4:
-            self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop = z
-            if random.random() < self._fake_reward_prob:
-                self.use_bo_reward = True
-            else:
-                self.use_bo_reward = False
-
-            if random.random() < self._fake_reward_prob:
-                self.use_cum_reward = True
-            else:
-                self.use_cum_reward = False
-        else:
+            z = random.choice(z_data[self._map_name][self._race][born_location_str])
+        if len(z) == 5:
             self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop, z_type = z
+        else:
+            self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop = z
+        self.use_cum_reward = True
+        self.use_bo_reward = True
+        if z_type is not None:
+            if z_type == 2 or z_type == 3:
+                self.use_cum_reward = False
+            if z_type == 1 or z_type == 3:
+                self.use_bo_reward = False
+        if random.random() > self._fake_reward_prob:
             self.use_cum_reward = False
+        if random.random() > self._fake_reward_prob:
             self.use_bo_reward = False
-            if (z_type == 0 or z_type == 1) and random.random() < self._fake_reward_prob:
-                self.use_cum_reward = True
-            if (z_type == 0 or z_type == 2) and random.random() < self._fake_reward_prob:
-                self.use_bo_reward = True
-            print('z_type', z_type, 'cum', self.use_cum_reward, 'bo', self.use_bo_reward)
+        print('z_type', z_type, 'cum', self.use_cum_reward, 'bo', self.use_bo_reward)
 
         if self._whole_cfg.agent.get('show_Z', False):
-            s = 'Map: {} Race: {}, Born location: ({}, {}), loop: {}\n'.format(map_name, race, born_location[0], born_location[1], self._target_z_loop)
+            s = 'Map: {} Race: {}, Born location: ({}, {}), loop: {}, idx: {}\n'.format(map_name, race, born_location[0], born_location[1], self._target_z_loop, idx)
             s += 'Building order:\n'
             for idx in range(len(self._target_building_order)):
                 a = self._target_building_order[idx]
@@ -674,7 +674,7 @@ class Agent:
                 elif order_len > 1:
                     order_str = 'order_id_{}'.format(order_len - 1)
                     action_index = QUEUE_ACTIONS[self._observation['entity_info'][order_str][unit_index].item() - 1]
-                # print(self.player_id, action_name, order_len.item(), 'cancel action:', ACTIONS[action_index]['name'])
+                print(self.player_id, action_name, order_len.item(), 'cancel action:', ACTIONS[action_index]['name'])
                 if action_index in CUMULATIVE_STAT_ACTIONS:
                     cum_flag = True
                     cum_index = CUMULATIVE_STAT_ACTIONS.index(action_index)

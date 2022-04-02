@@ -15,8 +15,8 @@ communication:
   actor_ask_for_job_interval: 3600 # seconds
   model_fs_type: 'torch'
 agent:
-  z_path: '3map.json'
-  show_Z: False
+  z_path: '7map_filter_spine.json'
+  show_Z: True
   zero_z_exceed_loop: True
   extra_units: True
   fake_reward_prob: 0.5
@@ -147,7 +147,7 @@ actor:
   job_type: 'train' # ['train', 'eval', 'train_test', 'eval_test']
   gpu_batch_inference: False
   env_num: 1
-  episode_num: 50
+  episode_num: 1
   print_freq: 1000
   traj_len: 2
   use_cuda: False
@@ -172,6 +172,7 @@ env:
   replay_dir: '.'
   game_steps_per_episode: 100000
   update_both_obs: False
+  version: '4.10.0'
 league:
   resume_path: ''
   use_historical_players: False

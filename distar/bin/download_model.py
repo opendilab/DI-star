@@ -52,13 +52,9 @@ class Downloader:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--rl', action='store_true', default=True)
-    parser.add_argument('--sl', action='store_true', default=False)
+    parser.add_argument('--name', type=str, default=None)
     args = parser.parse_args()
-    if args.rl:
-        model_name = 'rl_model.pth'
-    if args.sl:
-        model_name = 'sl_model.pth'
+    model_name = args.name + '.pth'
     url = 'http://opendilab.org/download/DI-star/' + model_name
     path = os.path.join(os.path.dirname(__file__), model_name)
     print('download model to {}'.format(path))

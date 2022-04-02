@@ -44,6 +44,7 @@ class Actor(object):
             self._comm.ask_for_job(self)
         else:
             self.models = {}
+            map_names = []
             for idx, player_id in enumerate(self._cfg.player_ids):
                 if 'bot' in player_id:
                     continue
@@ -62,13 +63,19 @@ class Actor(object):
                             agent.model = agent.model.eval().share_memory()
                         if not self._cfg.fake_model:
                             state_dict = torch.load(self._cfg.model_paths[player_id], map_location='cpu')
+                            if 'map_name' in state_dict:
+                                map_names.append(state_dict['map_name'])
+                                agent._fake_reward_prob = state_dict['fake_reward_prob']
+                                agent._z_path = state_dict['z_path']
+                                agent.z_idx = state_dict['z_idx']
                             model_state_dict = {k: v for k, v in state_dict['model'].items() if
                                                 'value_networks' not in k}
                             agent.model.load_state_dict(model_state_dict, strict=False)
                         self.models[player_id] = agent.model
                     else:
                         agent.model = self.models[player_id]
-
+            if len(map_names) == 1:
+                self._whole_cfg.env.map_name = map_names[0]
             if self._job_type == 'train_test':
                 teacher_models = {}
                 for idx, teacher_player_id in enumerate(self._cfg.teacher_player_ids):

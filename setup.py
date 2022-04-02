@@ -67,6 +67,7 @@ setup(
     ],
     install_requires=[
         'absl-py>=0.1.0',
+        'dill',
         'mock',
         'mpyq',
         'numpy>=1.10',

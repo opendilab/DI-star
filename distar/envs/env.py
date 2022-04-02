@@ -113,6 +113,10 @@ class SC2Env(object):
         self._players = players
 
         self._ori_map_name = self._cfg.get('map_name', 'KairosJunction')
+        if len(self._ori_map_name.split('_')) == 2:
+            self._ori_map_name, self._born_location = self._ori_map_name.split('_')
+        else:
+            self._born_location = None
 
         self._realtime = self._cfg.get('realtime', False)
         self._last_step_time = None
@@ -146,13 +150,17 @@ class SC2Env(object):
     def _setup_interface(self):
         self._interface = []
         map_size = get_map_size(self._map_name)
+        if self._human_flag:
+            raw_affects_selection = True
+        else:
+            raw_affects_selection = False
         for i in range(self._num_agents):
             interface = sc_pb.InterfaceOptions(
                 raw=True,
                 show_cloaked=False,
                 show_burrowed_shadows=False,
                 show_placeholders=False,
-                raw_affects_selection=True,
+                raw_affects_selection=raw_affects_selection,
                 raw_crop_to_playable_area=True,
                 score=True)
 
@@ -214,7 +222,8 @@ class SC2Env(object):
         create = sc_pb.RequestCreateGame(
             disable_fog=False,
             realtime=self._realtime)
-
+        if self._born_location is not None:
+            map_inst.filename = map_inst.filename + '_' + self._born_location
         create.local_map.map_path = map_inst.path
         map_data = map_inst.data(self._run_config)
         if self._num_agents == 1:
@@ -386,7 +395,7 @@ class SC2Env(object):
             for idx, agent_idx in enumerate(agent_indices):
                 self._obs[agent_idx] = observations[idx]
                 game_loops.append(self._obs[agent_idx].observation.game_loop)
-        if len(game_loops) == 2:
+        if len(game_loops) == 2 and not self._realtime:
             assert game_loops[0] == game_loops[1], '2 agents step into different game loop'
         game_loop = game_loops[0]
 
@@ -476,8 +485,9 @@ class SC2Env(object):
     def save_replay(self, replay_dir, prefix=None):
         if prefix is None:
             prefix = self._map_name
-        if 'raceid' in replay_dir and 'repeat' in replay_dir:
+        if ('raceid' in replay_dir and 'repeat' in replay_dir) or self._whole_cfg.actor.job_type == 'eval_test':
             replay_dir = replay_dir
+            replay_dir = os.path.abspath(replay_dir)
         else:
             time_label = '-'.join(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())).split('-')[:-2])
             replay_dir = os.path.abspath(os.path.join(replay_dir, time_label))
