@@ -1,21 +1,32 @@
 # DI-star
-This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
+This project is a reimplementation (with a few improvements) of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
 
 - [x] Play demo and test code (try and play with our agent!)
 
 - [x] First version of pre-trained SL and RL agent
 
-- [x] Training code of Supervised Learning *(New! updated by 2022-01-31)*
+- [x] Training code of Supervised Learning *(updated by 2022-01-31)*
 
-- [x] Training code of Reinforcement Learning with self-play and league *(New! updated by 2022-01-31)*
+- [x] Training code of Reinforcement Learning with self-play and league *(updated by 2022-01-31)*
 
-- [ ] Professional version of pre-trained RL agent *(WIP)*
+- [x] Agents fought with [Harstem (YouTube)](https://www.youtube.com/watch?v=fvQF-24IpXs&t=813s)  *(New! updated by 2022-04-01)*
+
+- [ ] More stronger pre-trained RL agents *(WIP)*
 
 
 ## Usage
 
+Please star ![stars - di-star](https://img.shields.io/github/stars/opendilab/di-star?style=social) us to help DI-star agents to grow up faster :)
+
 ### Installation
-For users unfamiliar with programming, follow instructions [here](docs/installation.pdf)
+For users unfamiliar with programming, follow instructions [here](https://github.com/opendilab/DI-star/raw/main/docs/installation.pdf)
+
+Environment requirement:
+
+- Python: 3.6-3.8
+
+
+
 
 #### 1.Install StarCraftII
 
@@ -65,13 +76,13 @@ Note: We trained our models with versions from 4.8.2 to 4.9.3. Patch 5.0.9 has c
 
 #### 2. Download models:
 ```bash
-python -m distar.bin.download_model --name sl_model
+python -m distar.bin.download_model --name rl_model
 ```
-Note: Specify `rl_model` or `sl_model` to download reinforcement learning model or supervised model.
+Note: Specify `rl_model` or `sl_model` after `--name` to download reinforcement learning model or supervised model.
 
 Model list:
 - `sl_model`: training with human replays, skill is equal to diamond players.
-- `rl_model`: training with reinforcement learning, skill is equal to master or grandmaster skills.
+- `rl_model`: used as default, training with reinforcement learning, skill is equal to master or grandmaster.
 - `Abathur`: one of reinforcement learning models, likes playing mutalisk. 
 - `Brakk`:  one of reinforcement learning models, likes lingbane rush.
 - `Dehaka`: one of reinforcement learning models, likes playing roach ravager.
@@ -87,14 +98,14 @@ It runs 2 StarCraftII instances. First one is controlled by our RL agent. Human 
 
 Note: 
 - GPU and CUDA is required on default, add `--cpu` if you don't have these.
-- Download RL model first or specify other models (like supervised model) with argument `--model1 <sl_model_path>`, pass either absolute path or relative path under distar/bin/
+- Download RL model first or specify other models (like supervised model) with argument `--model1 <model_name>`
 - In race cases, 2 StarCraftII instances may lose connection and agent won't issue any action. Please restart when this happens.
 
 ##### Agent vs Agent
 ```bash
 python -m distar.bin.play --game_type agent_vs_agent
 ```
-It runs 2 StarCraftII instances both controlled by our RL Agent, specify other model path with argument `--model1 <model1_path> --model2 <model2_path>`
+It runs 2 StarCraftII instances both controlled by our RL Agent, specify other model path with argument `--model1 <model_name> --model2 <model_name>`
 
 ##### Agent vs Bot
 ```bash
@@ -165,6 +176,12 @@ Distributed training is also supported like SL training.
 More configuration(e.g. batch size, learning rate, etc.)  could be found at `distar/bin/user_config.yaml`.
 
 Training guide and baselines will be added soon. 
+
+### Chat group
+Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
+
+
+Discord server: [link](https://discord.gg/FJHFUvJg)
 
 ## Citation
 ```latex
