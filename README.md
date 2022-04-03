@@ -15,6 +15,8 @@ This project is reimplementation of Alphastar (Only Zerg vs Zerg) based on OpenD
 ## Usage
 
 ### Installation
+For users unfamiliar with programming, follow instructions [here](docs/installation.pdf)
+
 #### 1.Install StarCraftII
 
 - Download the retail version of StarCraftII: https://starcraft2.com
@@ -56,13 +58,25 @@ Make sure you set SC2 at lowest picture quality before testing.**
 
 ### Play with pretrained agent
 
-#### 1. Download models:
-```bash
-python -m distar.bin.download_model --rl
-```
-Note: Specify `--rl` or `--sl` to download reinforcement learning model or supervised model.
+#### 1. Download StarCraftII version 4.10.0
+Double click file `replay_4.10.0.SC2Replay`, StarCraftII version 4.10.0 will be automatically downloaded.
 
-#### 2. Agent test
+Note: We trained our models with versions from 4.8.2 to 4.9.3. Patch 5.0.9 has came out in March 15, 2022, Some changes have huge impact on performance, so we fix our version at 4.10.0 in evaluation.
+
+#### 2. Download models:
+```bash
+python -m distar.bin.download_model --name sl_model
+```
+Note: Specify `rl_model` or `sl_model` to download reinforcement learning model or supervised model.
+
+Model list:
+- `sl_model`: training with human replays, skill is equal to diamond players.
+- `rl_model`: training with reinforcement learning, skill is equal to master or grandmaster skills.
+- `Abathur`: one of reinforcement learning models, likes playing mutalisk. 
+- `Brakk`:  one of reinforcement learning models, likes lingbane rush.
+- `Dehaka`: one of reinforcement learning models, likes playing roach ravager.
+
+#### 3. Agent test
 With the given model, we provide multiple tests with our agent.
 
 ##### Play against Agent

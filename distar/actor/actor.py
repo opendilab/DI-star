@@ -76,6 +76,9 @@ class Actor(object):
                         agent.model = self.models[player_id]
             if len(map_names) == 1:
                 self._whole_cfg.env.map_name = map_names[0]
+            if len(map_names) == 2:
+                if not(map_names[0] == 'random' and map_names[1] != 'random'):
+                    self._whole_cfg.env.map_name = 'NewRepugnancy'
             if self._job_type == 'train_test':
                 teacher_models = {}
                 for idx, teacher_player_id in enumerate(self._cfg.teacher_player_ids):

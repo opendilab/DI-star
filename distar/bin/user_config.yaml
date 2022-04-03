@@ -1,5 +1,4 @@
 var1: &model_path 'default'
-
 common:
   experiment_name: 'test'  # logger and checkpoint will be saved in this directory
 communication:
@@ -19,7 +18,7 @@ agent:
   show_Z: True
   zero_z_exceed_loop: True
   extra_units: True
-  fake_reward_prob: 0.5
+  fake_reward_prob: 0.8
   clip_bo: False
 feature:
   filter_spine: True
