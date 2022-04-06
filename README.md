@@ -16,7 +16,7 @@ This project is a reimplementation (with a few improvements) of Alphastar (Only 
 
 ## Usage
 
-Please star ![stars - di-star](https://img.shields.io/github/stars/opendilab/di-star?style=social) us to help DI-star agents to grow up faster :)
+Please star us (click ![stars - di-star](https://img.shields.io/github/stars/opendilab/di-star?style=social) button in the top-right of this page) to help DI-star agents to grow up faster :)
 
 ### Installation
 For users unfamiliar with programming, follow instructions [here](https://github.com/opendilab/DI-star/raw/main/docs/installation.pdf)
