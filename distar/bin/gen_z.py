@@ -284,7 +284,7 @@ class ReplayDecoder:
         return beginning_order, cumulative_stat, bo_len, bo_location, feature.home_born_location, race, loop
 
     def _parse_replay_info(self):
-        replay_info = self._controller.replay_info(self._replay_data)
+        replay_info = self._controller.replay_info(replay_path=self._replay_path)
         ret = dict()
         ret['race'] = [RACE_DICT[p.player_info.race_actual] for p in replay_info.player_info]
         ret['result'] = [RESULT_DICT[p.player_result.result] for p in replay_info.player_info]
@@ -317,7 +317,7 @@ class ReplayDecoder:
                     self._restart_count = 0
                     return None
             print(f'Start decoding replay with player {self._player_index}, path: {path}')
-            self._replay_data = self._run_config.replay_data(replay_path)
+            self._replay_path = replay_path
             self._replay_info = self._parse_replay_info()
             if self._replay_info['result'][self._player_index - 1] != 'W':
                 return None
