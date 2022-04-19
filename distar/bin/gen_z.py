@@ -238,7 +238,7 @@ class ReplayDecoder:
         size.assign_to(self._interface.feature_layer.minimap_resolution)
         self._controller.start_replay(
             sc_pb.RequestStartReplay(
-                replay_data=self._replay_data,
+                replay_path=self._replay_path,
                 options=self._interface,
                 observed_player_id=player,
             )
