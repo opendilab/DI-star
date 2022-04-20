@@ -253,6 +253,12 @@ class ReplayDecoder:
         feature = Features(game_info, raw_ob)
         traj_data = []
         race = RACE_DICT[feature.requested_races[raw_ob.observation.player_common.player_id]]
+        opponent_id = 1 if raw_ob.observation.player_common.player_id == 2 else 2
+        opponent_race = RACE_DICT[feature.requested_races[opponent_id]]
+        if race == opponent_race:
+            mix_race = race
+        else:
+            mix_race = race + opponent_race
         cached_actions = []
         last_last_ob = last_ob = raw_ob
         while cur_loop < game_loops:
@@ -281,7 +287,7 @@ class ReplayDecoder:
         beginning_order = beginning_order.tolist()
         cumulative_stat = cumulative_stat.nonzero().squeeze(dim=1).tolist()
         loop = player_actions[-1].game_loop
-        return beginning_order, cumulative_stat, bo_len, bo_location, feature.home_born_location, race, loop
+        return beginning_order, cumulative_stat, bo_len, bo_location, feature.home_born_location, mix_race, loop
 
     def _parse_replay_info(self):
         replay_info = self._controller.replay_info(replay_path=self._replay_path)

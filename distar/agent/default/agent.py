@@ -26,6 +26,13 @@ from distar.pysc2.lib.units import get_unit_type
 from distar.pysc2.lib.static_data import UNIT_TYPES, NUM_UNIT_TYPES
 from distar.ctools.torch_utils import to_device
 
+RACE_DICT = {
+    1: 'terran',
+    2: 'zerg',
+    3: 'protoss',
+    4: 'random',
+}
+
 
 def copy_input_data(shared_step_data, step_data, data_idx):
     entity_num = step_data['entity_num']
@@ -184,11 +191,19 @@ class Agent:
             z_data = self._z_data
         z_type = None
         idx = None
-        if self.z_idx is not None:
-            idx, z_type = random.choice(self.z_idx[self._map_name][self._race][born_location_str])
-            z = z_data[self._map_name][self._race][born_location_str][idx]
+        raw_ob = obs['raw_obs']
+        race = RACE_DICT[self._feature.requested_races[raw_ob.observation.player_common.player_id]]
+        opponent_id = 1 if raw_ob.observation.player_common.player_id == 2 else 2
+        opponent_race = RACE_DICT[self._feature.requested_races[opponent_id]]
+        if race == opponent_race:
+            mix_race = race
         else:
-            z = random.choice(z_data[self._map_name][self._race][born_location_str])
+            mix_race = race + opponent_race
+        if self.z_idx is not None:
+            idx, z_type = random.choice(self.z_idx[self._map_name][mix_race][born_location_str])
+            z = z_data[self._map_name][mix_race][born_location_str][idx]
+        else:
+            z = random.choice(z_data[self._map_name][mix_race][born_location_str])
         if len(z) == 5:
             self._target_building_order, target_cumulative_stat, bo_location, self._target_z_loop, z_type = z
         else:
@@ -207,7 +222,7 @@ class Agent:
         print('z_type', z_type, 'cum', self.use_cum_reward, 'bo', self.use_bo_reward)
 
         if self._whole_cfg.agent.get('show_Z', False):
-            s = 'Map: {} Race: {}, Born location: ({}, {}), loop: {}, idx: {}\n'.format(map_name, race, born_location[0], born_location[1], self._target_z_loop, idx)
+            s = 'Map: {} Race: {}, Born location: ({}, {}), loop: {}, idx: {}\n'.format(map_name, mix_race, born_location[0], born_location[1], self._target_z_loop, idx)
             s += 'Building order:\n'
             for idx in range(len(self._target_building_order)):
                 a = self._target_building_order[idx]
