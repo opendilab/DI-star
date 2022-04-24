@@ -8,7 +8,7 @@ from distar.ctools.worker.coordinator.coordinator import Coordinator, create_coo
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="sl_train")
-    parser.add_argument("--config", default=os.path.join(os.path.dirname(__file__), 'user_config.yaml'))
+    parser.add_argument("--config", default=os.path.join(os.path.dirname(__file__), 'sl_user_config.yaml'))
     parser.add_argument("--type", default='learner')
     parser.add_argument("--remote", action="store_true")
     parser.add_argument("--data", type=str, default=None)
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if args.data is not None:
         config.learner.data.train_data_file = args.data
     if args.type == 'learner':
-        exp_config_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, 'user_config.yaml')
+        exp_config_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, 'sl_user_config.yaml')
         try:
             os.makedirs(os.path.dirname(exp_config_path))
         except:

@@ -1,0 +1,55 @@
+common:
+  experiment_name: 'sl_train'  # logger and checkpoint will be saved in this directory
+communication:
+  coordinator_ip: '127.0.0.1' # coordinator server address
+  coordinator_port: 23333  # coordinator server port
+feature:
+  filter_spine: True  # whether to ignore spine around own base
+  zero_z_value: 1.  # value used for 0Z
+  beginning_order_prob: 0.8  # probability of using building order in SL training
+  cumulative_stat_prob: 0.5  # probability of useing cumulative statistics in RL training
+  zergling_num: 8  # how many zerglings are allowed in Z
+learner:
+  agent: 'default'  # agent name
+  job_type: 'train' # 'train' or 'test'
+  load_path: '' # load checkpoint when resume
+  use_cuda: True  # whether to use cuda
+  use_distributed: False  # whether to use distributed training
+  use_value_feature: False  # whether to use value feature
+  learning_rate: 0.001  
+  weight_decay: 0.00001  # weight decay in adam
+  load_optimizer: True  # whether to load optimizer in checkpoint
+  load_last_iter: True  # whether to load last iter in checkpoint
+  lr_decay: 1.0  # learning rate decay
+  lr_decay_interval: 10000  # learning rate decay interval
+  use_warmup: True  # whether to use warm up for learning rate
+  warm_up_steps: 20000  # max step in warm up
+  steps: 100000  # max step for training
+  su_mask: False  # whether to use selected units mask
+  use_dapo: False  # whether to use dapo in TstarBotX
+  grad_clip:
+    type: 'momentum_norm'  # gradient clip, one of ['max_norm', 'clip_value', 'none', 'clip_const', 'pytorch_norm', 'momentum_norm'], you can find more info at distar/ctoos/torh_utils/grad_clip.py
+    threshold: 1.4  # threshold for gradient clip
+  data:
+    remote: False  # whether to use remote mode
+    replay_actor_num_workers: 1  # only used in remote mode, determine the number of subprocesses in replay actor
+    filter_action: False  # whether to filter actions in replay decoding
+    parse_race: ['Z']  # races allowed in replay decoding, decode 3 races use ['Z', 'T', 'P']
+    train_data_file: '' # either an absolute directory with replays or a file includes an absolute replay path at each line.
+    epochs: 10          # repeat num of replay paths
+    batch_size: 2  # training batch size
+    trajectory_length: 4 
+    num_workers: 4      # should be larger than batch size
+  loss_weight:  # multiple heads loss weight
+    # sl loss
+    action_type: 30.0
+    delay: 9.0
+    queued: 1.0
+    selected_units: 4.0
+    select_unit_num_logits: 8.0
+    target_unit: 4.0
+    target_location: 8.0
+  hook:
+    save_ckpt_after_iter:
+      ext_args:
+        freq: 1000  # interval for saving checkpoint

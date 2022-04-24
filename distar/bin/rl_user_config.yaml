@@ -1,0 +1,206 @@
+var1: &model_path 'default'
+
+common:
+  experiment_name: 'rl_train'  # logger and checkpoint will be saved in this directory
+communication:
+  coordinator_ip: '127.0.0.1' # coordinator server address, also used for league server, run coordinator and league on the node you specified
+  coordinator_port: 23333  # coordinator server port
+  league_port: 23335  # league server port
+  learner_send_train_info_freq: 100  # learner will send how many frames and ask reset flag at this frequency
+  learner_send_model_freq: 4  # learner will send model to actor at this frequency
+  learner_send_model_worker_num: 1  # how many workers are used for sending models
+  adapter_model_worker_num: 1  # how many workers are used for exchaning model metadata in coordinator
+  adapter_traj_worker_num: 1  # how many workers are used for exchaning trajcetory metadata in coordinator
+  actor_model_update_interval: 10  # seconds, actor will update their models every 10 seconds
+  actor_ask_for_job_interval: 3600 # seconds, actor will ask for a new job every 3600 seconds
+  model_fs_type: 'torch' # model serilization method in tcp communication
+agent:
+  zero_z_exceed_loop: True  # set Z to 0 if game passes the game loop in Z
+  extra_units: True  # selcet extra units if selected units exceed 64
+  fake_reward_prob: 0.0  # probablity which set Z to 0
+  clip_bo: False  # clip the length of teacher's building order to agent's length
+feature:
+  filter_spine: True  # whether to ignore spine around own base
+  zero_z_value: 1.  # value used for 0Z
+  zergling_num: 8  # how many zerglings are allowed in Z
+learner:
+  agent: 'default'  # agent name
+  job_type: 'train' # 'train' or 'test'
+  load_path: '' # load checkpoint when resume
+  use_cuda: True
+  use_distributed: False
+  use_value_feature: True  # whether to use value feature, this must be False when play against bot
+  load_last_iter: True  # whether to load last iter in checkpoint
+  load_optimizer: False  # whether to load optimizer in checkpoint
+  lr_decay: 1.0  # learning rate decay
+  lr_decay_interval: 10000  # learning rate decay interval
+  use_warmup: False  # whether to use warm up for learning rate
+  warm_up_steps: 20000  # max step in warm up
+  steps: 100000000  # max step for training
+  su_mask: False  # whether to use selected units mask
+  use_dapo: False  # whether to use dapo in TstarBotX
+  learning_rate: 0.00001
+  weight_decay: 0  # weight decay in adam
+  var_record_type: 'alphastar'  # log type
+  value_pretrain_iters: 4000  # max step for value pretrain
+  optimizer_warm_up_iters: 100  # warm up adam optimizer without updating model
+  reset_env_wait_time: 60  # reset environment in actor after model reloading.
+  grad_clip:
+    type: 'pytorch_norm'  # gradient clip, one of ['max_norm', 'clip_value', 'none', 'clip_const', 'pytorch_norm', 'momentum_norm'], you can find more info at distar/ctoos/torh_utils/grad_clip.py
+    threshold: 1.0  # threshold for gradient clip
+  data:
+    buffer_size: 6  # replay buffer size in learner, should be larger than batch_size
+    batch_size: 4
+    num_workers: 2  # workers request data from actor 
+    use_async_cuda: False  # put data to gpu in an asynchronous way
+    data_path_queue_size: 2  # how many data are stored in queue
+    trajectory_length: 16 
+  loss_weights: 
+      baseline:  # loss weight for critic
+          winloss: 10.0 #10.0
+          build_order: 0.0
+          built_unit: 0.0
+          effect: 0.0
+          upgrade: 0.0
+          battle: 0.0
+      pg:  # vtrace loss weight for policy
+          winloss: 1.0
+          build_order: 0.0
+          built_unit: 0.0
+          effect: 0.0
+          upgrade: 0.0
+          battle: 0.0
+      upgo: # loss weight for upgo
+          winloss: 1.0
+      kl: 0.002  # loss weight for kl divergency from teacher model
+      action_type_kl: 0.1  # extra action type loss weight
+      dapo: 0.1  # dapo loss weight
+      entropy: 0.0001  # entropy loss weight
+  pg_head_weights:  # vtrace loss weight for each head in policy
+      action_type: 1.0
+      delay: 1.0
+      queued: 1.0
+      selected_units: 1.0
+      target_unit: 1.0
+      target_location: 1
+  upgo_head_weights:  # upgo loss weight for each head in policy
+      action_type: 1.0
+      delay: 1.0
+      queued: 1.0
+      selected_units: 1.0
+      target_unit: 1.0
+      target_location: 1
+  entropy_head_weights: 
+      action_type: 1.0
+      delay: 1.0
+      queued: 1.0
+      selected_units: 1
+      target_unit: 1.0
+      target_location: 1
+  kl_head_weights:
+      action_type: 1.0
+      delay: 1.0
+      queued: 1.0
+      selected_units: 1
+      target_unit: 1.0
+      target_location: 1.0
+  dapo_head_weights:
+      action_type: 1.0
+      delay: 1.0
+      queued: 1.0
+      selected_units: 1
+      target_unit: 1.0
+      target_location: 1.0
+  kl:
+    action_type_kl_steps: 5200  # enable extra action type kl loss during first 5200 game steps
+  dapo:
+    dapo_steps: 2400  # enable dapo loss during first 5200 game steps
+  hook:
+    save_ckpt_after_iter:
+      ext_args:
+        freq: 1000  # save checkpoint frenquency
+model:
+  enable_baselines: ['winloss']  # multiple values chosen from ['winloss', 'build_order', 'built_unit', 'battle'] of which value network should be enabled
+actor:
+  job_type: 'train' 
+  # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
+  gpu_batch_inference: False  # whether to use gpu for batch inference
+  env_num: 3  # enviroment number
+  episode_num: 100  # episode number
+  print_freq: 1000  # log frequency in actor log
+  traj_len: 16  # trajectory length, should be same as trajectory length in learner
+  use_cuda: False  # whether to use gpu in 'train_test' or 'eval_test'
+  fake_model: False # if True, skip model loading
+  player_ids: ['model1', 'model2']  # player ids used in RL
+  agents:  
+    model1: 'default'  # key is one of player_ids, value is agent name
+    model2: 'default'
+  model_paths:
+    model1: *model_path  # key is one of player_ids, value is model checkpoint path
+    model2: *model_path
+  teacher_player_ids: ['haha', 'haha']  # teacher player ids used in RL
+  teacher_model_paths:
+    haha: 'haha.pth.tar'  # key is one of teacher player ids
+env:
+  map_size_resolutions: [True, True]  # if True, ignore minimap_resolutions
+  minimap_resolutions: [[160, 152], [160, 152]]   # minimap feature resulution, used in interface option
+  realtime: False  # whether to use realtime in game, set True when play with human
+  replay_dir: './replays' # where to save replay, '.' means saved at current working directory
+  game_steps_per_episode: 100000  # maximum step in one game, the game will end when it reaches the game step
+  update_both_obs: True  # request opponent's observation in own observation, set True if you use value feature in learner
+  save_replay_episodes: 1  # save replay interval
+  save_replay: False  # whether to save replay
+league:
+  resume_path: ''  # league resume path, it's under experiments/rl_train/league_resume
+  use_historical_players: True  # whether to use historical players
+  fake_model: False  # skip model loading, use for debug
+  vs_bot: False  # train against bots other than self play
+  eval_bot: False  # evluation with bots
+  pfsp_train_bot: False  # use pfsp in training against bots
+  bot_probs:  [0, 0, 0, 1.0, 0, 0, 0, 0,0, 0, 0]  # probabilities for each bot level
+  save_initial_snapshot: False  # whether to snapshot the initial main player as historical player
+  map_names: ['KairosJunction']  # one of ['KairosJunction', 'KingsCove', 'NewRepugnancy'], random mean a random map from these three
+  map_id_weights: [ 1 ]  # weights used for map sampling.
+  active_players:
+    checkpoint_path: [ *model_path ] 
+    player_id: [ 'MP0' ]  # player type (capital letters) + serial number, player type: one of ['MP', 'ME', 'EP', 'EE', 'EX', 'AE'], find more in fo at /distar/ctools/league/player.py
+    pipeline: [ 'default' ]  # agent name
+    frac_id: [ 1 ]  # 0: random 1: zerg, 2: terran, 3: protoss
+    z_prob: [0.0]  # this will overwrite fake_reward_prob in agent
+    teacher_id: [ 'teacher_model' ]  # casual name for teacher id
+    teacher_path: [ *model_path ]  # teacher's model path, normally it should be the supervised model
+    z_path: [ '3map.json' ]  # which z file should be used
+    one_phase_step: [ '4e8' ]  # how many frames the main player should be trained to generate a new historical player
+    chosen_weight: [1]  # when there are multiple main players, jobs will be distributed to actors following this weight
+  historical_players:
+    player_id: [ 'sl']
+    checkpoint_path: [ *model_path ]
+    pipeline: [ 'default', ]
+    frac_id: [ 1 ]
+    z_prob: [0.0]
+    z_path: ['3map.json' ]
+  branch_probs:  # every type of main player has multiple job types, this is job types distribution
+    MainPlayer: 
+      sp: 0.5   # self play
+      pfsp: 0.5  # prioritized fictitious self play
+      eval: 0.0  # uniform sample
+    ExploiterPlayer:
+      pfsp: 0.95  
+      eval: 0.05
+    MainExploiterPlayer:
+      vs_main: 0.5  # play against main players
+      pfsp: 0.45
+      eval: 0.05
+    AdaptiveEvolutionaryExploiterPlayer:
+      vs_main: 0.45
+      pfsp: 0.45
+      eval: 0.1
+    ExpertPlayer:
+      pfsp: 0.95
+      eval: 0.05
+  print_freq: 100  #  league log frequency
+  stat_decay: 0.995  #  win rate decay in player statistics
+  payoff_min_win_rate_games: 100  # the win rate between two players will be 0.5 until 100 games
+  active_payoff_log: True # determine whether to print payoff log for active player
+  hist_payoff_log: False # determine whether to print payoff log for hist player
+

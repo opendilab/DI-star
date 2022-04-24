@@ -25,7 +25,7 @@ def learner_run(config, args):
 
     config.learner.player_id = args.player_id
     learner_config_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name,
-                                       config.learner.player_id, 'user_config.yaml')
+                                       config.learner.player_id, 'rl_user_config.yaml')
     address_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, config.learner.player_id,
                                 'address')
     cluster_address_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name,
@@ -66,7 +66,7 @@ def actor_run(config, args):
 
 
 def league_run(config, args):
-    exp_config_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, 'user_config.yaml')
+    exp_config_path = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, 'rl_user_config.yaml')
     try:
         os.makedirs(os.path.dirname(exp_config_path))
     except:
@@ -77,7 +77,7 @@ def league_run(config, args):
     config_dir = os.path.join(os.getcwd(), 'experiments', config.common.experiment_name, 'config')
     if not os.path.exists(config_dir):
         os.makedirs(config_dir)
-    bk_exp_config_path = os.path.join(config_dir, f'user_config_{time_label}.yaml')
+    bk_exp_config_path = os.path.join(config_dir, f'rl_user_config_{time_label}.yaml')
     shutil.copyfile(args.config, bk_exp_config_path)
 
     default_model_path = os.path.join(os.path.dirname(__file__), 'sl_model.pth')
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         shutil.copytree(os.path.join(os.path.dirname(__file__), '../envs/maps/Ladder2019Season2'), os.path.join(sc2path, 'Maps/Ladder2019Season2'))
 
     parser = argparse.ArgumentParser(description="rl_train")
-    parser.add_argument("--config", default=os.path.join(os.path.dirname(__file__), 'user_config.yaml'))
+    parser.add_argument("--config", default=os.path.join(os.path.dirname(__file__), 'rl_user_config.yaml'))
     parser.add_argument("--type", default=None)
     parser.add_argument("--task", default='bot')
     parser.add_argument("--player_id", default='MP0')
@@ -133,6 +133,7 @@ if __name__ == '__main__':
         config.learner.use_distributed = True
     if args.task == 'bot':
         config.league.vs_bot = True
+        config.learner.use_value_feature = False
     elif args.task == 'selfplay':
         config.league.vs_bot = False
     else:
@@ -147,7 +148,7 @@ if __name__ == '__main__':
         p_league = mp_context.Process(target=league_run, args=(config, args))
         p_league.start()
         time.sleep(10)
-        p_learner = mp_context.Process(target=learner_run, args=(config, args, args.init_method, args.rank, args.world_size))
+        p_learner = mp_context.Process(target=learner_run, args=(config, args))
         p_learner.start()
         time.sleep(10)
         actor_run(config, args)

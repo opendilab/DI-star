@@ -1,230 +1,43 @@
-var1: &model_path 'default'
+var1: &model_path 'default'  # defaut means rl_model under distar/bin/, you can specify other models with absolute path.
 common:
-  experiment_name: 'test'  # logger and checkpoint will be saved in this directory
-communication:
-  coordinator_ip: '127.0.0.1' # IMPORTANT, run coordinator and league on the node you specified
-  coordinator_port: 23333
-  league_port: 23335
-  learner_send_train_info_freq: 100
-  learner_send_model_freq: 4
-  learner_send_model_worker_num: 1
-  adapter_model_worker_num: 1
-  adapter_traj_worker_num: 1
-  actor_model_update_interval: 10 # seconds
-  actor_ask_for_job_interval: 3600 # seconds
-  model_fs_type: 'torch'
+  type: 'play'  # one of ["play", "sl", "rl"], used for identify them
 agent:
-  z_path: '7map_filter_spine.json'
-  show_Z: True
-  zero_z_exceed_loop: True
-  extra_units: True
-  fake_reward_prob: 0.8
-  clip_bo: False
+  z_path: '7map_filter_spine.json'  # statistics Z file
+  show_Z: True  # whether print statistics Z
+  zero_z_exceed_loop: True  # set Z to 0 if game passes the game loop in Z
+  extra_units: True  # selcet extra units if selected units exceed 64
+  fake_reward_prob: 0.8  # probablity which set Z to 0
 feature:
-  filter_spine: True
-  zero_z_value: 1.
-  beginning_order_prob: 0.8
-  cumulative_stat_prob: 0.5
-  zergling_num: 8
-learner:
-  agent: 'default'
-  job_type: 'train' # 'train' or 'test'
-  load_path: '' # load checkpoint when resume
-  use_cuda: True
-  use_distributed: False
-  use_value_feature: False
-  learning_rate: 0.001
-  weight_decay: 0.00001
-  load_optimizer: True
-  load_last_iter: True
-  lr_decay: 1.0
-  lr_decay_interval: 10000
-  use_warmup: False
-  warm_up_steps: 20000
-  steps: 100000
-  su_mask: False
-  use_dapo: False
-  grad_clip:
-    type: 'momentum_norm'
-    threshold: 1.4
-  data:
-    remote: True
-    replay_actor_num_workers: 1
-    filter_action: False
-    parse_race: ['Z']
-    train_data_file: ''
-    epochs: 10
-    batch_size: 1
-    trajectory_length: 2
-    use_async_cuda: False
-    num_workers: 1
-  loss_weight:
-    # sl loss
-    action_type: 30.0
-    delay: 9.0
-    queued: 1.0
-    selected_units: 4.0
-    select_unit_num_logits: 8.0
-    target_unit: 4.0
-    target_location: 8.0
-  # rl loss
-    baseline:
-      winloss: 10.0
-      build_order: 1.0
-      built_unit: 1.0
-      effect: 0.0
-      upgrade: 0.0
-      battle: 0.0
-      pg:
-        winloss: 1.0
-        build_order: 4.0
-        built_unit: 6.0
-        effect: 0.0
-        upgrade: 0.0
-        battle: 0.0
-      upgo:
-        winloss: 1.0
-      kl: 0.002
-      action_type_kl: 0.1
-      dapo: 0.1
-      entropy: 0.0001
-  pg_head_weights:
-    action_type: 1.0
-    delay: 1.0
-    queued: 1.0
-    selected_units: 1.0
-    target_unit: 1.0
-    target_location: 1
-  upgo_head_weights:
-    action_type: 1.0
-    delay: 1.0
-    queued: 1.0
-    selected_units: 1.0
-    target_unit: 1.0
-    target_location: 1
-  entropy_head_weights:
-    action_type: 1.0
-    delay: 1.0
-    queued: 1.0
-    selected_units: 1
-    target_unit: 1.0
-    target_location: 1
-  kl_head_weights:
-    action_type: 1.0
-    delay: 1.0
-    queued: 1.0
-    selected_units: 1
-    target_unit: 1.0
-    target_location: 1.0
-  dapo_head_weights:
-    action_type: 1.0
-    delay: 1.0
-    queued: 1.0
-    selected_units: 1
-    target_unit: 1.0
-    target_location: 1.0
-  kl:
-    action_type_kl_steps: 5200
-  dapo:
-    dapo_steps: 2400
-  hook:
-    save_ckpt_after_iter:
-      ext_args:
-        freq: 1000
-model:
-  enable_baselines: ['winloss']
-  entity_reduce_type: 'selected_units_num'
-  temperature: 0.8
-  policy:
-    head:
-      location_head:
-        activation: 'relu'
-        gate: True
-        film: False
-        unet: False
+  zero_z_value: 1.  # value used for 0Z
+  zergling_num: 8  # how many zerglings are allowed in Z
 actor:
-  job_type: 'train' # ['train', 'eval', 'train_test', 'eval_test']
-  gpu_batch_inference: False
-  env_num: 1
-  episode_num: 1
-  print_freq: 1000
-  traj_len: 2
-  use_cuda: False
-  fake_model: False # if True, skip model loading
-  player_ids: ['model1', 'model2']
-  agents:
-    model1: 'default'
-    model2: 'default'
+  job_type: 'eval_test'
+  # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
+  gpu_batch_inference: False  # whether to use gpu for batch inference
+  env_num: 1  # enviroment number
+  episode_num: 1  # episode number
+  print_freq: 1000  # log frequency in actor log
+  traj_len: 2  # trajectory length
+  use_cuda: False  # whether to use gpu in 'train_test' or 'eval_test'
+  fake_model: False # if True, skip model loading 
+  player_ids: ['model1', 'model2']  # player ids used in RL
+  agents: 
+    model1: 'default'  # key is one of player_ids, value is agent name
+    model2: 'template'  
   model_paths:
-    model1: *model_path
+    model1: *model_path  # key is one of player_ids, value is model checkpoint path
     model2: *model_path
-  teacher_player_ids: ['haha', 'haha']
-  teacher_model_paths:
-    haha: 'haha.pth.tar'
+  teacher_player_ids: ['haha', 'haha']  # teacher player ids used in RL
+  teacher_model_paths:  
+    haha: 'haha.pth.tar'  # key is one of teacher player ids
 env:
-  map_name: 'random'
-  player_ids: ['agent1', 'bot10']
-  races: ['zerg', 'zerg']
+  map_name: 'random'  # one of ['KairosJunction', 'KingsCove', 'NewRepugnancy'], random mean a random map from these three
+  player_ids: ['agent1', 'bot10']  # player ids shown in game and replay, bot0 - bot10 means built-in bots
+  races: ['zerg', 'zerg']  # player races
   map_size_resolutions: [True, True] # if True, ignore minimap_resolutions
-  minimap_resolutions: [[160, 152], [160, 152]]
-  realtime: False
-  replay_dir: '.'
-  game_steps_per_episode: 100000
-  update_both_obs: False
-  version: '4.10.0'
-league:
-  resume_path: ''
-  use_historical_players: False
-  fake_model: False
-  vs_bot: True
-  eval_bot: False
-  pfsp_train_bot: False
-  bot_probs: [0, 0, 0, 0, 0, 0, 0, 0.2,0.2, 0.3, 0.3]
-  save_initial_snapshot : True
-  map_names: ['random']
-  map_id_weights: [ 1 ]
-  active_players:
-    checkpoint_path: [ *model_path ]
-    player_id: [ 'MP0' ]
-    pipeline: [ 'default' ]
-    frac_id: [ 1 ]  # 0: random 1: zerg, 2: terran, 3: protoss
-    z_prob: [0.25]
-    teacher_id: [ 'model' ]
-    teacher_path: [ *model_path ]
-    z_path: [ '3map.json' ]
-    one_phase_step: [ '4e8' ]
-    chosen_weight: [1]
-  historical_players:
-    player_id: [ 'sl']
-    checkpoint_path: [ *model_path ]
-    pipeline: [ 'default', ]
-    frac_id: [ 1 ]
-    z_prob: [0.0]
-    z_path: ['3map.json' ]
-  branch_probs:
-    MainPlayer:
-      sp: 0.35
-      pfsp: 0.6
-      eval: 0.05
-    ExploiterPlayer:
-      pfsp: 0.95
-      eval: 0.05
-    MainExploiterPlayer:
-      vs_main: 0.5
-      pfsp: 0.45
-      eval: 0.05
-    AdaptiveEvolutionaryExploiterPlayer:
-      vs_main: 0.45
-      pfsp: 0.45
-      eval: 0.1
-    ExpertPlayer:
-      pfsp: 0.95
-      eval: 0.05
-  print_freq: 100
-  ladder_min_games: 100
-  stat_decay: 0.995
-  stat_warm_up_size: 1000
-  payoff_min_win_rate_games: 100
-  active_payoff_log: True # determine whether to print payoff log for active player
-  hist_payoff_log: False # determine whether to print payoff log for hist player
-
+  minimap_resolutions: [[160, 152], [160, 152]]  # minimap feature resulution, used in interface option
+  realtime: False  # whether to use realtime in game, set True when play with human
+  replay_dir: '.'  # where to save replay, '.' means saved at current working directory
+  game_steps_per_episode: 100000  # maximum length in one game, the game will end when it reaches the game step
+  update_both_obs: False  # request opponent's observation in own observation
+  version: '4.10.0'  # SC2 game version
