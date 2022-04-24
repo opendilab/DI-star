@@ -49,7 +49,7 @@ export SC2PATH4_8_3=</your/4.8.3/path/of/StarCraft II>
 export SC2PATH4_8_4=</your/4.8.4/path/of/StarCraft II>
 ```
 
-On Windows, version 4.10.0 and newer are supported. Older ones have an issue with war fog.
+On Windows, version 4.10.0 is supported. Older ones have an issue with war fog.
 Double click replays [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
 (TODO: support all versions and all maps on Windows)
 
