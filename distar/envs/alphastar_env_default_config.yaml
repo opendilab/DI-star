@@ -1,5 +1,4 @@
 env:
-    game_type: 'human_vs_agent'
     local: True
     screen_resolution: [1, 1]
     default_step_mul: 8  # not used

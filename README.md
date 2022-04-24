@@ -5,11 +5,11 @@ This project is a reimplementation (with a few improvements) of Alphastar (Only 
 
 - [x] First version of pre-trained SL and RL agent
 
-- [x] Training code of Supervised Learning *(updated by 2022-01-31)*
+- [x] Training code of Supervised Learning and Reinforcement Learning *(updated by 2022-01-31)*
 
-- [x] Training code of Reinforcement Learning with self-play and league *(updated by 2022-01-31)*
+- [x] Training baseline with limited resource(one PC) and training guidance [here](docs/guidance_to_small_scale_training.md) *(New! updated 2022-04-24)
 
-- [x] Agents fought with [Harstem (YouTube)](https://www.youtube.com/watch?v=fvQF-24IpXs&t=813s)  *(New! updated by 2022-04-01)*
+- [x] Agents fought with [Harstem (YouTube)](https://www.youtube.com/watch?v=fvQF-24IpXs&t=813s)  *(updated by 2022-04-01)*
 
 - [ ] More stronger pre-trained RL agents *(WIP)*
 
@@ -70,7 +70,7 @@ Make sure you set SC2 at lowest picture quality before testing.**
 ### Play with pretrained agent
 
 #### 1. Download StarCraftII version 4.10.0
-Double click file `replay_4.10.0.SC2Replay`, StarCraftII version 4.10.0 will be automatically downloaded.
+Double click the file [data/replays/replay_4.10.0.SC2Replay](data/replays/replay_4.10.0.SC2Replay), StarCraftII version 4.10.0 will be automatically downloaded.
 
 Note: We trained our models with versions from 4.8.2 to 4.9.3. Patch 5.0.9 has came out in March 15, 2022, Some changes have huge impact on performance, so we fix our version at 4.10.0 in evaluation.
 
@@ -114,7 +114,15 @@ python -m distar.bin.play --game_type agent_vs_bot
 RL agent plays against built-in elite bot.
 
 
-## Training your own agent with our framework
+## Building your own agent with our framework
+It is necessary to build different agents within one code base and still be able to make them play against each other.
+We implement this by making actor and environment as common components and putting everything related to the agent into one directory.
+The agent called default under distar/agent is an example of this. Every script under default uses relative import, which 
+makes them portable to anywhere as a whole part. 
+
+If you want to create a new agent with/without our default agent, follow instructions [here](docs/agent.md)
+
+If you want to train a new agent with our framework, follow instructions below and [here] is a guidance with more details of the whole training pipeline.
 ### Supervised Learning
 StarCraftII client is required for replay decoding, follow instructions above.
 ```bash
@@ -171,11 +179,6 @@ python -m distar.bin.rl_train --type actor
 ```
 
 Distributed training is also supported like SL training.
-
-### Training Tips
-More configuration(e.g. batch size, learning rate, etc.)  could be found at `distar/bin/user_config.yaml`.
-
-Training guide and baselines will be added soon. 
 
 ### Chat group
 Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)

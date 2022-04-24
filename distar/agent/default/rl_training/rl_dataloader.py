@@ -134,7 +134,6 @@ class RLDataLoader(object):
     ) -> None:
         self._whole_cfg = cfg
         self.cfg = self._whole_cfg.learner.data
-        self.map_name = self._whole_cfg.env.map_name
         self.use_cuda = self._whole_cfg.learner.use_cuda and torch.cuda.is_available()
         self.use_async_cuda = self.cfg.get('use_async_cuda', True)
         self.num_workers = self.cfg.get('num_workers', 1)

@@ -82,9 +82,11 @@ VERSIONS = version_dict([
     Version("4.9.2", 74741, "614480EF79264B5BD084E57F912172FF", None),
     Version("4.9.3", 75025, "C305368C63621480462F8F516FB64374", None),
     Version("4.10.0", 75689, "B89B5D6FA7CBF6452E721311BFBC6CB2", None),
+    # Version("4.10.0", 75689, None, None),
     Version("4.10.1", 75800, "DDFFF9EC4A171459A4F371C6CC189554", None),
-    # Version("4.10.2", 76052, "default", None),
-    # Version("4.10.3", 75800, "default", None),
+    # Version("4.10.1", 75800, None, None),
+    Version("4.10.2", 76052, None, None),
+    # Version("4.10.3", 75800, None, None),
     # Version("4.10.4", 76811, "default", None),
     # Version("4.11.0", 77379, "default", None),
     # Version("4.11.1", 77474, "default", None),
@@ -97,11 +99,11 @@ VERSIONS = version_dict([
     # Version("5.0.1", 81009, "default", None),
     # Version("5.0.2", 81102, "default", None),
     # Version("5.0.3", 81433, "default", None),
-    # Version("5.0.4", 82457, "default", None),
-    # Version("5.0.5", 82893, "default", None),
-    # Version("5.0.6", 83830, "default", None),
-    # Version("5.0.7", 84643, "default", None),
-    # Version("5.0.8", 80949, "86383", None),
+    Version("5.0.4", 82457, "D2707E265785612D12B381AF6ED9DBF4", None),
+    Version("5.0.5", 82893, "D795328C01B8A711947CC62AA9750445", None),
+    Version("5.0.6", 83830, "B4745D6A4F982A3143C183D8ACB6C3E3", None),
+    Version("5.0.7", 84643, "A389D1F7DF9DD792FBE980533B7119FF", None),
+    Version("5.0.8", 87702, "22EAC562CD0C6A31FB2C2C21E3AA3680", None),
 ])
 
 
@@ -227,7 +229,8 @@ class RunConfig(object):
       if not game_version.game_version:
         raise ValueError(
             "Version '%r' supplied without a game version." % (game_version,))
-      if (game_version.data_version and
+      # game_version.data_version and
+      if (
           game_version.binary and
           game_version.build_version):
         return game_version
