@@ -16,6 +16,7 @@ from distar.ctools.utils import build_logger, dist_init, EasyTimer, dist_finaliz
 from distar.ctools.utils import deep_merge_dicts
 from distar.ctools.worker.learner.learner_hook import build_learner_hook_by_cfg, add_learner_hook, merge_hooks, LearnerHook
 from distar.ctools.torch_utils.grad_clip import build_grad_clip
+from distar.ctools.torch_utils.lr_scheduler_util import GradualWarmupScheduler
 
 default_config = read_config(os.path.join(os.path.dirname(__file__), "base_learner_default_config.yaml"))
 
@@ -167,8 +168,15 @@ class BaseLearner(ABC):
         )
         # warm_up
         if self._whole_cfg.learner.use_warmup:
-            warm_up_with_cosine_lr = lambda step: step / self._whole_cfg.learner.warm_up_steps if step <= self._whole_cfg.learner.warm_up_steps else self._whole_cfg.learner.learning_rate
-            self._lr_scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=warm_up_with_cosine_lr)
+            lr_decay = self._whole_cfg.learner.get('lr_decay', 0.9)
+            lr_decay_interval = int(self._whole_cfg.learner.get('lr_decay_interval', 10000))
+            multiplier = self._whole_cfg.learner.get('multiplier', 1)
+            warm_up_steps = self._whole_cfg.learner.get('warm_up_steps', 10000)
+            self._after_lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(self._optimizer, milestones=list(
+                range(0, lr_decay_interval * 40, lr_decay_interval))[1:], gamma=lr_decay)
+            self._lr_scheduler = GradualWarmupScheduler(optimizer=self._optimizer, multiplier=multiplier,
+                                                       total_epoch=warm_up_steps,
+                                                       after_scheduler=self._after_lr_scheduler)
         else:
             self._lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(self._optimizer, milestones=list(range(0, lr_decay_interval * 20, lr_decay_interval))[1:], gamma=lr_decay)
 
