@@ -42,6 +42,7 @@ However, in our small-scale supervised training, we don't need so many replays. 
 Each replay has a certain version, we need to download the corresponding StarCraft II client first.
 
 On Linux, versions from 3.16 - 4.10 are supported, download [here](https://github.com/Blizzard/s2client-proto#linux-packages)
+
 Different versions are stored at different StarCraft II path, so we use multiple environment variables to identify them like this:
 ```
 export SC2PATH4_8_3=</your/4.8.3/path/of/StarCraft II>
@@ -50,15 +51,19 @@ export SC2PATH4_8_4=</your/4.8.4/path/of/StarCraft II>
 
 On Windows, version 4.10.0 and newer are supported. Older ones have an issue with war fog.
 Double click replays [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
-# TODO support all versions and all maps on Windows
+(TODO: support all versions and all maps on Windows)
 
 
 ### 2. Configuration
-We use multi *.yaml* files to configure training:
-Model at distar/agent/default/model/actor_critic_default_config.yaml
-Learner at distar/ctools./earner/base_learner_default_config.yaml
-Entry at distar/bin/sl_user_config.yaml
-`sl_user_config.yaml` is the entry of SL training and the only file you need to change through training. It will overwrite 
+We use several *.yaml* files to configure training:
+
+Model at [distar/agent/default/model/actor_critic_default_config.yaml](../distar/agent/default/model/actor_critic_default_config.yaml)
+
+Learner at [distar/ctools./earner/base_learner_default_config.yaml](../distar/ctools./earner/base_learner_default_config.yaml)
+
+Entry at [distar/bin/sl_user_config.yaml](../distar/bin/sl_user_config.yaml)
+
+[sl_user_config.yaml](../distar/bin/sl_user_config.yaml) is the entry of SL training and the only file you need to change through training. It will overwrite 
 other configurations if you put the same field there. We annotate each line in it for a better understanding.
 
 Followings are some very important parameters needs further explanation in our small-scale training baseline.
@@ -100,7 +105,7 @@ python -m distar.bin.sl_train --type coordinator
 python -m distar.bin.sl_train --type learner --remote
 python -m distar.bin.sl_train --type replay_actor --data <path>
 ```
-In remote mode, specify coordinator_ip and coordinator_port in `sl_user_config.yaml`, then you can run learner and replay_actor on different machines. 
+In remote mode, specify coordinator_ip and coordinator_port in [sl_user_config.yaml](../distar/bin/sl_user_config.yaml), then you can run learner and replay_actor on different machines. 
 default is localhost:23333
 
 ### 4. Evaluation
@@ -120,11 +125,13 @@ python -m distar.bin.play --game_type agent_vs_bot --model1 <abs/path/of/checkpo
 
 #### Generate statistics Z(strategies) file:
 AlphaStar used different building orders and built units derived from human replays to make agent play certain strategy during evaluation, We have multiple Z files(*.json)
-prepared under `distar/agent/default/lib`. They are only for zerg vs zerg on 7 maps (KairosJunction, CyberForest, Acropolis, KingsCove, NewRepugnancy,Automaton,PortAleksander), if you want to create your own files for new maps or races, run:
+prepared under [distar/agent/default/lib](../distar/agent/default/lib). They are only for zerg vs zerg on 7 maps (KairosJunction, CyberForest, Acropolis, KingsCove, NewRepugnancy,Automaton,PortAleksander), if you want to create your own files for new maps or races, run:
 
 `python -m distar.bin.gen_z --data <replay path or file with replay path in each line> --name <output file name> --num_workers <number of workers>`
-Output file will be saved at `distar/agent/default/lib`
 
+Output file will be saved at [distar/agent/default/lib](../distar/agent/default/lib)
+
+Note: Only the winning side in replays will be decoded.
 ### Experiment Results
 Followings are some experiment results of supervised training:
 ![](guidance/sl_exp_result.png)
@@ -168,9 +175,12 @@ According to AlphaStar, they used temperature 0.8 in evaluation. In our test, th
 
 ### Large scale training
 We use 56 Nvidia A100 graphics cards for learner and 1792 cpu cores for replay_actor in supervised training. 
+
 The total batch size is 336, trajectory length is 64.
+
 160k human replays(mmr above 4000, versions from 4.8.2 to 4.9.3) are used for training. 7k replays (mmr above 5800) are used for fine-tuning
-It costs around 1s per iteration in training. After 165k iterations (2 days) of training, the agent has a 87% win rate against built-in elite bot. 
+
+After 165k iterations (1s per iteration, totally 2 days) of training, the agent has a 87% win rate against built-in elite bot. 
 After 37k iterations of fine-tuning, the win rate reaches 97%. All evluation come from 100 games with setting Z to 0.
 
 ## Reinforcement Learning
@@ -197,7 +207,7 @@ reduce training efficiency. To overcome these problems, we use coordinator to tr
 scirpt to run.
 
 ### Configuration
-Followings are some important parameters in `rl_user_config.yaml`.
+Followings are some important parameters in [distar/bin/rl_user_config.yaml](../distar/bin/rl_user_config.yaml).
 - common.experiment_name:
 Name of experiment, default to be rl_train.
 - league.resume_path:
@@ -251,7 +261,7 @@ in actor.
 1. AlphaStar uses opponent's observation to reduce variance in value estimation, this costs double data transmission and more GPU mermory,
 instead we pull out some critical information from opponent's observation, so we can set our batch size to 6 instead of 4 in each graphics card.
 2. AlphaStar uses 4 active players in league training, they are Main Player, League Exploiters * 2, Main Exploiter. We change one League Exploiter to 
-Expert Exploiter which only uses a group of hand-picked strategies at one time(like mutalisk, hydralisk, you can find these files here `agent/default/lib/*.json`).
+Expert Exploiter which only uses a group of hand-picked strategies at one time(like mutalisk, hydralisk, you can find these *.json files here [agent/default/lib](../distar/agent/default/lib)).
 3. We reset League Exploiter and Main Exploiter to a history checkpoint of Main Player instead of supervised model at late stage, cause
 training from supervised model is too slow and nearly impossible to catch up the current league at that phase, this insight comes from [TStarBotX](https://arxiv.org/abs/2011.13729)
 
@@ -267,6 +277,8 @@ More maps means more complexity, we cut down the number of maps from 7 to 3 at h
 
 ### Large scale training
 We use 128 Nvidia A100 for 4 learners (each with 32) and approximately 10000 cpu cores for 300 actors.
+
 The total batch size is 192 and trajectory length is 64 for each learner.
+
 It costs around 1.5s per iteration in training and 2 months (2200k iterations) for training.
 
