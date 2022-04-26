@@ -1,13 +1,13 @@
 # DI-star
-This project is a reimplementation (with a few improvements) of Alphastar (Only Zerg vs Zerg) based on OpenDILab, which contains:
+This project is a reimplementation (with a few improvements) of Alphastar based on OpenDILab, which contains:
 
 - [x] Play demo and test code (try and play with our agent!)
 
-- [x] First version of pre-trained SL and RL agent
+- [x] First version of pre-trained SL and RL agent (only Zerg vs Zerg)
 
 - [x] Training code of Supervised Learning and Reinforcement Learning *(updated by 2022-01-31)*
 
-- [x] Training baseline with limited resource(one PC) and training guidance [here](docs/guidance_to_small_scale_training.md) *(New! updated 2022-04-24)
+- [x] Training baseline with limited resource(one PC) and training guidance [here](docs/guidance_to_small_scale_training.md) *(New! updated 2022-04-24)*
 
 - [x] Agents fought with [Harstem (YouTube)](https://www.youtube.com/watch?v=fvQF-24IpXs&t=813s)  *(updated by 2022-04-01)*
 
@@ -122,7 +122,7 @@ makes them portable to anywhere as a whole part.
 
 If you want to create a new agent with/without our default agent, follow instructions [here](docs/agent.md)
 
-If you want to train a new agent with our framework, follow instructions below and [here] is a guidance with more details of the whole training pipeline.
+If you want to train a new agent with our framework, follow instructions below and [here](docs/guidance_to_small_scale_training.md) is a guidance with more details of the whole training pipeline.
 ### Supervised Learning
 StarCraftII client is required for replay decoding, follow instructions above.
 ```bash
