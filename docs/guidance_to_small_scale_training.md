@@ -50,7 +50,7 @@ export SC2PATH4_8_4=</your/4.8.4/path/of/StarCraft II>
 ```
 
 On Windows, version 4.10.0 is supported. Older ones have an issue with war fog.
-Double click replays [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
+Double click replay files [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
 (TODO: support all versions and all maps on Windows)
 
 
@@ -59,7 +59,7 @@ We use several *.yaml* files to configure training:
 
 Model at [distar/agent/default/model/actor_critic_default_config.yaml](../distar/agent/default/model/actor_critic_default_config.yaml)
 
-Learner at [distar/ctools./earner/base_learner_default_config.yaml](../distar/ctools./earner/base_learner_default_config.yaml)
+Learner at [distar/ctools/woker/learner/base_learner_default_config.yaml](../distar/ctools/worker/learner/base_learner_default_config.yaml)
 
 Entry at [distar/bin/sl_user_config.yaml](../distar/bin/sl_user_config.yaml)
 
