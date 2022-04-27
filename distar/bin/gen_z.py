@@ -7,6 +7,8 @@ import json
 import multiprocessing
 import mpyq
 import argparse
+import six
+import json
 
 from collections import defaultdict
 
@@ -34,6 +36,13 @@ RESULT_DICT = {
     2: 'L',
     3: 'D',
     4: 'U'
+}
+
+
+BUILD2VERSION = {
+    80188: "4.12.1",
+    81009: "5.0.0",
+    81433: "5.0.3"
 }
 
 
@@ -304,15 +313,17 @@ class ReplayDecoder:
         try:
             replay_path = path
             with open(replay_path, 'rb') as f:
-                archive = mpyq.MPQArchive(f, listfile=False)
-                header_content = archive.header["user_data_header"]["content"]
-                header_data = BitPackedDecoder(header_content).read_struct()
-                versions = list(header_data[1].values())
-                version = "{0}.{1}.{2}".format(*versions[1:4])
-                if version not in VERSIONS:
-                    print(
-                        f'Decode replay ERROR: {replay_path}, no corresponded game version: {version}, use latest in stead.')
-                    version = 'latest'
+                replay_io = six.BytesIO()
+                replay_io.write(f.read())
+                replay_io.seek(0)
+                archive = mpyq.MPQArchive(replay_io).extract()
+                metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
+                versions = metadata["GameVersion"].split(".")[:-1]
+                build = int(metadata["BaseBuild"][4:])
+                if build in BUILD2VERSION:
+                    versions = BUILD2VERSION[build].split(".")
+                version = "{0}.{1}.{2}".format(*versions)
+                env_path = 'SC2PATH{0}_{1}_{2}'.format(*versions)
 
             if self._version != version or self._restart_count == 10:
                 if self._version is not None:

@@ -49,9 +49,10 @@ export SC2PATH4_8_3=</your/4.8.3/path/of/StarCraft II>
 export SC2PATH4_8_4=</your/4.8.4/path/of/StarCraft II>
 ```
 
-On Windows, version 4.10.0 is supported. Older ones have an issue with war fog.
-Double click replay files [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
-(TODO: support all versions and all maps on Windows)
+On Windows, version 4.10.0 and newer are supported. Older ones have an issue with war fog.
+Double click replays [here](../data/replays), The corresponding version of SC2 will be automatically downloaded.
+As for maps, you can download the ladder maps within SC2 client by searching the map name when creating custom game.
+You can find the ladder map list [here](https://liquipedia.net/starcraft2/Maps/Ladder_Maps/Legacy_of_the_Void)
 
 
 ### 2. Configuration

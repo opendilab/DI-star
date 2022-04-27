@@ -4,6 +4,8 @@ import time
 import random
 import traceback
 import mpyq
+import six
+import json
 
 from distar.pysc2 import run_configs
 from distar.pysc2.lib import point
@@ -30,6 +32,12 @@ RESULT_DICT = {
     2: 'L',
     3: 'D',
     4: 'U'
+}
+
+BUILD2VERSION = {
+    80188: "4.12.1",
+    81009: "5.0.0",
+    81433: "5.0.3"
 }
 
 
@@ -353,20 +361,25 @@ class ReplayDecoder:
     def run(self, path, player_index):
         try:
             replay_path = path.strip()
-            with open(path, 'rb') as f:
-                archive = mpyq.MPQArchive(f, listfile=False)
-                header_content = archive.header["user_data_header"]["content"]
-                header_data = BitPackedDecoder(header_content).read_struct()
-                versions = list(header_data[1].values())
-                version = "{0}.{1}.{2}".format(*versions[1:4])
-                env_path = 'SC2PATH{0}_{1}_{2}'.format(*versions[1:4])
+            with open(replay_path, 'rb') as f:
+                replay_io = six.BytesIO()
+                replay_io.write(f.read())
+                replay_io.seek(0)
+                archive = mpyq.MPQArchive(replay_io).extract()
+                metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
+                versions = metadata["GameVersion"].split(".")[:-1]
+                build = int(metadata["BaseBuild"][4:])
+                if build in BUILD2VERSION:
+                    versions = BUILD2VERSION[build].split(".")
+                version = "{0}.{1}.{2}".format(*versions)
+                env_path = 'SC2PATH{0}_{1}_{2}'.format(*versions)
                 if env_path in os.environ:
                     os.environ['SC2PATH'] = os.environ[env_path]
                 if version not in VERSIONS:
-                    print(f'Decode replay ERROR: {path}, no corresponded game version: {version}, use latest in stead.')
+                    print(f'Decode replay ERROR: {replay_path}, no corresponded game version: {version}, use latest in stead.')
                     version = 'latest'
             self._player_index = player_index
-            print(f'Start decoding replay with player {player_index}, path: {path}')
+            print(f'Start decoding replay with player {player_index}, path: {replay_path}')
             if self._version != version or self._restart_count == 10:
                 if self._version is not None:
                     self._sc2_process.close()
