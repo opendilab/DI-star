@@ -1,7 +1,7 @@
 # Introduction
    StarCraft II is a one of the most challenging environments in reinforcement learning.
 AlphaStar gives us a solution using a complicated training procedure and massive computing resources,
- which is unavailable for most individuals. We provide a baseline using very limited resource
+ which is unavailable for most individuals. We provide a baseline based on AlphaStar using very limited resource
  (one pc with 32G RAM、 8G GPU). If you want to train your own agent or conduct further research based on this code base,
  this guidance will help you walk through the whole training pipeline.
 
