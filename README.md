@@ -1,5 +1,5 @@
-# DI-star
-This project is a reimplementation (with a few improvements) of Alphastar based on OpenDILab, which contains:
+# Overview
+DI-star: A large-scale game AI distributed training platform specially developed for the StarCraft II. We've already trained grand-master AI！Which contains:
 
 - [x] Play demo and test code (try and play with our agent!)
 
