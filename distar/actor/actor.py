@@ -77,7 +77,7 @@ class Actor(object):
             if len(map_names) == 1:
                 self._whole_cfg.env.map_name = map_names[0]
             if len(map_names) == 2:
-                if not(map_names[0] == 'random' and map_names[1] != 'random'):
+                if not(map_names[0] == 'random' and map_names[1] == 'random'):
                     self._whole_cfg.env.map_name = 'NewRepugnancy'
             if self._job_type == 'train_test':
                 teacher_models = {}
@@ -255,6 +255,7 @@ class Actor(object):
                 except Exception as e:
                     print('[EPISODE LOOP ERROR]', e, flush=True)
                     print(''.join(traceback.format_tb(e.__traceback__)), flush=True)
+                    episode_count += 1
                     self._env.close()
             self._env.close()
             if result_queue is not None:
