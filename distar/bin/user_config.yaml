@@ -23,7 +23,7 @@ actor:
   player_ids: ['model1', 'model2']  # player ids used in RL
   agents: 
     model1: 'default'  # key is one of player_ids, value is agent name
-    model2: 'template'  
+    model2: 'default'  
   model_paths:
     model1: *model_path  # key is one of player_ids, value is model checkpoint path
     model2: *model_path
