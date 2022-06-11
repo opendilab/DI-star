@@ -1,5 +1,5 @@
 # Overview
-DI-star: A large-scale game AI distributed training platform specially developed for the StarCraft II. We've already trained grand-master AI！Which contains:
+DI-star: A large-scale game AI distributed training platform specially developed for the StarCraft II. We've already trained grand-master AI！This project contains:
 
 - [x] Play demo and test code (try and play with our agent!)
 
@@ -14,18 +14,18 @@ DI-star: A large-scale game AI distributed training platform specially developed
 - [ ] More stronger pre-trained RL agents *(WIP)*
 
 
+
 ## Usage
+
+[Testing software on Windows](docs/installation.md) | [对战软件下载](docs/安装教程.md)
 
 Please star us (click ![stars - di-star](https://img.shields.io/github/stars/opendilab/di-star?style=social) button in the top-right of this page) to help DI-star agents to grow up faster :)
 
 ### Installation
-For users unfamiliar with programming, follow instructions [here](https://github.com/opendilab/DI-star/raw/main/docs/installation.pdf)
 
 Environment requirement:
 
 - Python: 3.6-3.8
-
-
 
 
 #### 1.Install StarCraftII
