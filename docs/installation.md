@@ -8,7 +8,7 @@ https://drive.google.com/file/d/1re0eJNQxL6OjQZTIq7jeq-6DyIRUB020/view?usp=shari
 
 Or tecent cloud:
 
-https://share.weiyun.com/ToeySzxn
+https://share.weiyun.com/qadgsbhk
 
 2.Unzip distar.zip:
 
