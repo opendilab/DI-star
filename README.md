@@ -184,7 +184,7 @@ Distributed training is also supported like SL training.
 Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQEH1_Kuyu_q4plBssQ)
 
 
-Discord server: [link](https://discord.gg/FJHFUvJg)
+Discord server: [link](https://discord.gg/4ZDVwb97)
 
 ## Citation
 ```latex
