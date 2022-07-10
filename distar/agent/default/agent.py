@@ -19,7 +19,7 @@ from torch.utils.data._utils.collate import default_collate
 
 from .model.model import Model
 from .lib.actions import NUM_CUMULATIVE_STAT_ACTIONS, ACTIONS, BEGINNING_ORDER_ACTIONS, CUMULATIVE_STAT_ACTIONS, UNIT_ABILITY_TO_ACTION, QUEUE_ACTIONS, UNIT_TO_CUM, UPGRADE_TO_CUM
-from .lib.features import Features, SPATIAL_SIZE, BEGINNING_ORDER_ACTIONS, CUMULATIVE_STAT_ACTIONS, BEGINNING_ORDER_LENGTH, ScoreCategories, compute_battle_score, fake_step_data, fake_model_output
+from .lib.features import Features, SPATIAL_SIZE, BEGINNING_ORDER_ACTIONS, CUMULATIVE_STAT_ACTIONS, BEGINNING_ORDER_LENGTH, ScoreCategories, compute_battle_score, compute_econ_score, fake_step_data, fake_model_output
 from .lib.stat import Stat, cum_dict
 from distar.ctools.torch_utils.metric import levenshtein_distance, hamming_distance, l2_distance
 from distar.pysc2.lib.units import get_unit_type
@@ -102,6 +102,7 @@ class Agent:
         self._bo_norm = self._whole_cfg.get('learner', {}).get('bo_norm',20)
         self._cum_norm = self._whole_cfg.get('learner', {}).get('cum_norm',30)
         self._battle_norm = self._whole_cfg.get('learner', {}).get('battle_norm',30)
+        self._econ_norm = self._whole_cfg.get('learner', {}).get('econ_norm',50)
         self.model = Model(cfg)
         self._player_id = None
         self._num_layers = self.model.cfg.encoder.core_lstm.num_layers
@@ -478,7 +479,7 @@ class Agent:
             self._success_iter_count += 1
 
         behavior_z = self.get_behavior_z()
-        bo_reward, cum_reward, battle_reward = self.update_fake_reward(next_obs)
+        bo_reward, cum_reward, battle_reward, econ_reward = self.update_fake_reward(next_obs)
         agent_obs = self._observation
         # teacher model forward
         teacher_obs = {'spatial_info': agent_obs['spatial_info'], 'entity_info': agent_obs['entity_info'],
@@ -554,6 +555,7 @@ class Agent:
                        'built_unit': cum_reward,
                        # 'upgrade': torch.randint(-1, 1, size=(), dtype=torch.float),
                        'battle': battle_reward,
+                       'econ': econ_reward,
                        },
             'step': torch.tensor(self._game_step, dtype=torch.float),
             'mask': mask,
@@ -613,8 +615,8 @@ class Agent:
                 'cumulative_stat': torch.as_tensor(self._behaviour_cumulative_stat, dtype=torch.bool).long()}
 
     def update_fake_reward(self, next_obs):
-        bo_reward, cum_reward, battle_reward = self._update_fake_reward(self._last_action_type, self._last_location, next_obs)
-        return bo_reward, cum_reward, battle_reward
+        bo_reward, cum_reward, battle_reward, econ_reward = self._update_fake_reward(self._last_action_type, self._last_location, next_obs)
+        return bo_reward, cum_reward, battle_reward, econ_reward
 
     def _update_fake_reward(self, action_type, location, next_obs):
         bo_reward = torch.zeros(size=(), dtype=torch.float)
@@ -625,17 +627,23 @@ class Agent:
         battle_reward = battle_score - self._game_info['battle_score'] - (opponent_battle_score - self._game_info['opponent_battle_score'])
         battle_reward = torch.tensor(battle_reward, dtype=torch.float) / self._battle_norm
 
+        econ_score = compute_econ_score(next_obs['raw_obs'])
+        opponent_econ_score = compute_econ_score(next_obs['opponent_obs'])
+        econ_reward = econ_score - self._game_info['econ_score'] - (opponent_econ_score - self._game_info['opponent_econ_score'])
+        econ_reward = torch.tensor(econ_reward, dtype=torch.float) / self._econ_norm
+        print("econ_reward", econ_reward)
+
         if not self._exceed_flag:
-            return bo_reward, cum_reward, battle_reward
+            return bo_reward, cum_reward, battle_reward, econ_reward
 
         if action_type in BEGINNING_ORDER_ACTIONS and next_obs['action_result'][0] == 1:
             if action_type == 322:
                 self._bo_zergling_count += 1
                 if self._bo_zergling_count > 8:
-                    return bo_reward, cum_reward, battle_reward
+                    return bo_reward, cum_reward, battle_reward, econ_reward
             order_index = BEGINNING_ORDER_ACTIONS.index(action_type)
             if order_index == 39 and 39 not in self._target_building_order:  # ignore spinecrawler
-                return bo_reward, cum_reward, battle_reward
+                return bo_reward, cum_reward, battle_reward, econ_reward
             if len(self._behaviour_building_order) < len(self._target_building_order):
                 # only consider bo_reward if behaviour size < target size
                 self._behaviour_building_order.append(order_index)
@@ -710,7 +718,7 @@ class Agent:
             self._old_cum_reward = new_cum_reward
         self._total_bo_reward += bo_reward
         self._total_cum_reward += cum_reward
-        return bo_reward, cum_reward, battle_reward
+        return bo_reward, cum_reward, battle_reward, econ_reward
 
     def gpu_batch_inference(self, teacher=False):
         if not teacher:

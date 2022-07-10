@@ -1,7 +1,7 @@
 var1: &model_path 'default'
 
 common:
-  experiment_name: 'rl_train_battle'  # logger and checkpoint will be saved in this directory
+  experiment_name: 'rl_train_econ'  # logger and checkpoint will be saved in this directory
 communication:
   coordinator_ip: '127.0.0.1' # coordinator server address, also used for league server, run coordinator and league on the node you specified
   coordinator_port: 23333  # coordinator server port
@@ -62,14 +62,16 @@ learner:
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 5.0
+          battle: 0.0
+          econ: 5.0
       pg:  # vtrace loss weight for policy
           winloss: 1.0
           build_order: 0.0
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 0.5
+          battle: 0.0
+          econ: 0.5
       upgo: # loss weight for upgo
           winloss: 1.0
       kl: 0.002  # loss weight for kl divergency from teacher model
@@ -120,12 +122,12 @@ learner:
       ext_args:
         freq: 1000  # save checkpoint frenquency
 model:
-  enable_baselines: ['winloss']  # multiple values chosen from ['winloss', 'build_order', 'built_unit', 'battle'] of which value network should be enabled
+  enable_baselines: ['winloss', 'econ']  # multiple values chosen from ['winloss', 'build_order', 'built_unit', 'battle', 'econ'] of which value network should be enabled
 actor:
   job_type: 'train' 
   # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
   gpu_batch_inference: False  # whether to use gpu for batch inference
-  env_num: 5  # enviroment number
+  env_num: 8  # enviroment number
   episode_num: 100  # episode number
   print_freq: 1000  # log frequency in actor log
   traj_len: 32  # trajectory length, should be same as trajectory length in learner

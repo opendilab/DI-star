@@ -363,6 +363,20 @@ def compute_battle_score(obs):
     return battle_score
 
 
+def compute_econ_score(obs):
+    if obs is None:
+        return 0.
+    score_details = obs.observation.score.score_details
+    killed_mineral, killed_vespene, collected_mineral, collected_vespene = 0., 0., 0., 0.
+    for s in ScoreCategories:
+        killed_mineral += getattr(score_details.killed_minerals, s.name)
+        killed_vespene += getattr(score_details.killed_vespene, s.name)
+        collected_mineral += getattr(score_details.collected_minerals, s.name)
+        collected_vespene += getattr(score_details.collected_vespene, s.name)
+    econ_score = killed_mineral + killed_vespene + collected_mineral + collected_vespene
+    return econ_score
+
+
 class Features(object):
     def __init__(self, game_info, raw_ob, cfg={}):
         self._map_size = game_info.start_raw.map_size
@@ -682,6 +696,8 @@ class Features(object):
         game_info['tags'] = tags
         game_info['battle_score'] = compute_battle_score(obs)
         game_info['opponent_battle_score'] = 0.
+        game_info['econ_score'] = compute_econ_score(obs)
+        game_info['opponent_econ_score'] = 0.
         ret = {
             'spatial_info': spatial_info, 'scalar_info': scalar_info, 'entity_num': torch.tensor(len(entity_info['unit_type']), dtype=torch.long),
             'entity_info': entity_info, 'game_info': game_info,
@@ -764,6 +780,7 @@ class Features(object):
                              'own_units_spatial': own_units_spatial.unsqueeze(dim=0), 'enemy_units_spatial': enemy_units_spatial.unsqueeze(dim=0)}
             ret['value_feature'] = value_feature
             game_info['opponent_battle_score'] = compute_battle_score(opponent_obs)
+            game_info['opponent_econ_score'] = compute_econ_score(opponent_obs)
         return ret
 
     @sw.decorate
