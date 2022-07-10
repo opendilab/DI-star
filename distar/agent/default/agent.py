@@ -631,7 +631,7 @@ class Agent:
         opponent_econ_score = compute_econ_score(next_obs['opponent_obs'])
         econ_reward = econ_score - self._game_info['econ_score'] - (opponent_econ_score - self._game_info['opponent_econ_score'])
         econ_reward = torch.tensor(econ_reward, dtype=torch.float) / self._econ_norm
-        print("econ_reward", econ_reward)
+        # print("econ_reward", econ_reward)
 
         if not self._exceed_flag:
             return bo_reward, cum_reward, battle_reward, econ_reward
