@@ -367,13 +367,7 @@ def compute_econ_score(obs):
     if obs is None:
         return 0.
     score_details = obs.observation.score.score_details
-    killed_mineral, killed_vespene, collected_mineral, collected_vespene = 0., 0., 0., 0.
-    for s in ScoreCategories:
-        killed_mineral += getattr(score_details.killed_minerals, s.name)
-        killed_vespene += getattr(score_details.killed_vespene, s.name)
-        collected_mineral += getattr(score_details.collected_minerals, s.name)
-        collected_vespene += getattr(score_details.collected_vespene, s.name)
-    econ_score = killed_mineral + killed_vespene + collected_mineral + collected_vespene
+    econ_score = score_details.collected_minerals + score_details.collected_vespene
     return econ_score
 
 
