@@ -61,7 +61,8 @@ class BotBuild(enum.IntEnum):
 
 
 #MAPS = ['KairosJunction', 'CyberForest', 'Acropolis', 'KingsCove', 'NewRepugnancy', 'Thunderbird', 'PortAleksander']
-MAPS = ['KairosJunction', 'KingsCove', 'NewRepugnancy']
+#MAPS = ['KairosJunction', 'KingsCove', 'NewRepugnancy']
+MAPS = ['KairosJunction']
 
 
 def to_list(arg):

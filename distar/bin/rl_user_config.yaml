@@ -1,7 +1,7 @@
 var1: &model_path 'default'
 
 common:
-  experiment_name: 'rl_train'  # logger and checkpoint will be saved in this directory
+  experiment_name: 'rl_train_battle'  # logger and checkpoint will be saved in this directory
 communication:
   coordinator_ip: '127.0.0.1' # coordinator server address, also used for league server, run coordinator and league on the node you specified
   coordinator_port: 23333  # coordinator server port
@@ -42,7 +42,7 @@ learner:
   learning_rate: 0.00001
   weight_decay: 0  # weight decay in adam
   var_record_type: 'alphastar'  # log type
-  value_pretrain_iters: 4000  # max step for value pretrain
+  value_pretrain_iters: 0  # max step for value pretrain
   optimizer_warm_up_iters: 100  # warm up adam optimizer without updating model
   reset_env_wait_time: 60  # reset environment in actor after model reloading.
   grad_clip:
@@ -54,7 +54,7 @@ learner:
     num_workers: 2  # workers request data from actor 
     use_async_cuda: False  # put data to gpu in an asynchronous way
     data_path_queue_size: 2  # how many data are stored in queue
-    trajectory_length: 16 
+    trajectory_length: 32
   loss_weights: 
       baseline:  # loss weight for critic
           winloss: 10.0 #10.0
@@ -62,14 +62,14 @@ learner:
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 0.0
+          battle: 5.0
       pg:  # vtrace loss weight for policy
           winloss: 1.0
           build_order: 0.0
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 0.0
+          battle: 0.5
       upgo: # loss weight for upgo
           winloss: 1.0
       kl: 0.002  # loss weight for kl divergency from teacher model
@@ -125,10 +125,10 @@ actor:
   job_type: 'train' 
   # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
   gpu_batch_inference: False  # whether to use gpu for batch inference
-  env_num: 3  # enviroment number
+  env_num: 5  # enviroment number
   episode_num: 100  # episode number
   print_freq: 1000  # log frequency in actor log
-  traj_len: 16  # trajectory length, should be same as trajectory length in learner
+  traj_len: 32  # trajectory length, should be same as trajectory length in learner
   use_cuda: False  # whether to use gpu in 'train_test' or 'eval_test'
   fake_model: False # if True, skip model loading
   player_ids: ['model1', 'model2']  # player ids used in RL
@@ -142,6 +142,7 @@ actor:
   teacher_model_paths:
     haha: 'haha.pth.tar'  # key is one of teacher player ids
 env:
+  map_name: 'KairosJunction'
   map_size_resolutions: [True, True]  # if True, ignore minimap_resolutions
   minimap_resolutions: [[160, 152], [160, 152]]   # minimap feature resulution, used in interface option
   realtime: False  # whether to use realtime in game, set True when play with human
@@ -149,7 +150,7 @@ env:
   game_steps_per_episode: 100000  # maximum step in one game, the game will end when it reaches the game step
   update_both_obs: True  # request opponent's observation in own observation, set True if you use value feature in learner
   save_replay_episodes: 1  # save replay interval
-  save_replay: False  # whether to save replay
+  save_replay: True  # whether to save replay
 league:
   resume_path: ''  # league resume path, it's under experiments/rl_train/league_resume
   use_historical_players: True  # whether to use historical players
