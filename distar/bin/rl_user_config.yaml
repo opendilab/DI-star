@@ -42,7 +42,7 @@ learner:
   learning_rate: 0.00001
   weight_decay: 0  # weight decay in adam
   var_record_type: 'alphastar'  # log type
-  value_pretrain_iters: 0  # max step for value pretrain
+  value_pretrain_iters: 200  # max step for value pretrain
   optimizer_warm_up_iters: 100  # warm up adam optimizer without updating model
   reset_env_wait_time: 60  # reset environment in actor after model reloading.
   grad_clip:
@@ -62,16 +62,16 @@ learner:
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 2.5
-          econ: 2.5
+          battle: 5.0
+          econ: 0.0
       pg:  # vtrace loss weight for policy
           winloss: 1.0
           build_order: 0.0
           built_unit: 0.0
           effect: 0.0
           upgrade: 0.0
-          battle: 0.25
-          econ: 0.25
+          battle: 0.5
+          econ: 0.0
       upgo: # loss weight for upgo
           winloss: 1.0
       kl: 0.002  # loss weight for kl divergency from teacher model
@@ -127,7 +127,7 @@ actor:
   job_type: 'train' 
   # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
   gpu_batch_inference: False  # whether to use gpu for batch inference
-  env_num: 8  # enviroment number
+  env_num: 4  # enviroment number
   episode_num: 100  # episode number
   print_freq: 1000  # log frequency in actor log
   traj_len: 32  # trajectory length, should be same as trajectory length in learner

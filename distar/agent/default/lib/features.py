@@ -355,11 +355,13 @@ def compute_battle_score(obs):
     if obs is None:
         return 0.
     score_details = obs.observation.score.score_details
-    killed_mineral, killed_vespene = 0., 0.
+    killed_mineral, killed_vespene, total_used_minerals, total_used_vespene = 0., 0., 0., 0.
     for s in ScoreCategories:
         killed_mineral += getattr(score_details.killed_minerals, s.name)
         killed_vespene += getattr(score_details.killed_vespene, s.name)
-    battle_score = killed_mineral + 1.5 * killed_vespene
+        total_used_minerals += getattr(score_details.total_used_minerals, s.name)
+        total_used_vespene += getattr(score_details.total_used_vespene, s.name)
+    battle_score = (killed_mineral + total_used_minerals) + 1.5 * (killed_vespene + total_used_vespene)
     return battle_score
 
 
