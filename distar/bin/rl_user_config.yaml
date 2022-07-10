@@ -127,7 +127,7 @@ actor:
   job_type: 'train' 
   # one of ['train', 'eval', 'train_test', 'eval_test'], train used for RL, eval used for evaluation, '_test' indicates use only one environment without multiprocessing
   gpu_batch_inference: False  # whether to use gpu for batch inference
-  env_num: 5  # enviroment number
+  env_num: 8  # enviroment number
   episode_num: 100  # episode number
   print_freq: 1000  # log frequency in actor log
   traj_len: 32  # trajectory length, should be same as trajectory length in learner
