@@ -122,7 +122,7 @@ class ReinforcementLoss:
         # ===========
         total_critic_loss = 0
 
-        # field is from ['winloss', 'build_order','built_unit','effect','upgrade','battle']
+        # field is from ['winloss', 'build_order','built_unit','effect','upgrade','battle','econ']
         for field, baseline in baseline_values_dict.items():
             reward = rewards_dict[field]
             # td_lambda_loss = self._td_lambda_loss(baseline, reward) * self.loss_weights.baseline[field]
@@ -136,7 +136,7 @@ class ReinforcementLoss:
             loss_info_dict[field + '/td'] = critic_loss.item()
             loss_info_dict[field + '/reward'] = reward.float().mean().item()
             loss_info_dict[field + '/value'] = baseline.mean().item()
-        loss_info_dict['battle' + '/reward'] = rewards_dict['battle'].float().mean().item()
+        # loss_info_dict['battle' + '/reward'] = rewards_dict['battle'].float().mean().item()
         # ============
         # entropy loss
         # ============

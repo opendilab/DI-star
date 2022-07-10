@@ -696,6 +696,7 @@ class AlphaStarVarRecord(VariableRecord):
             'effect': 'effect',
             'upgrade': 'upgrade',
             'battle': 'battle',
+            'econ': 'econ',
             'upgo': 'upgo',
             'kl': 'kl',
             'ent': 'entropy',
@@ -720,7 +721,7 @@ class AlphaStarVarRecord(VariableRecord):
         data = []
         k0 = ['cur_lr', 'data_time', 'train_time', 'forward_time', 'backward_time', 'total_loss', 'gradient',
               'kl/extra_at']
-        k1 = ['winloss', 'bo', 'bu', 'effect', 'upgrade', 'battle', 'upgo', 'kl', 'ent']
+        k1 = ['winloss', 'bo', 'bu', 'effect', 'upgrade', 'battle', 'econ', 'upgo', 'kl', 'ent']
         k2 = ['rew', 'val', 'td', 'at', 'delay', 'queued', 'su', 'tu', 'tl', 'total']
 
         all_vars = self.get_var_names('scalar')

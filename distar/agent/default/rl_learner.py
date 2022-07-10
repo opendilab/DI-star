@@ -182,7 +182,7 @@ class RLLearner(BaseLearner):
             self._record.register_var(k)
             self._tb_logger.register_var(k)
 
-        for k1 in ['winloss', 'build_order', 'built_unit', 'effect', 'upgrade', 'battle', 'upgo', 'kl', 'entropy']:
+        for k1 in ['winloss', 'build_order', 'built_unit', 'effect', 'upgrade', 'battle', 'econ', 'upgo', 'kl', 'entropy']:
             for k2 in ['reward', 'value', 'td', 'action_type', 'delay', 'queued', 'selected_units',
                        'target_unit', 'target_location', 'total']:
                 k = k1 + '/' + k2
