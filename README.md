@@ -86,6 +86,7 @@ Model list:
 - `Abathur`: one of reinforcement learning models, likes playing mutalisk. 
 - `Brakk`:  one of reinforcement learning models, likes lingbane rush.
 - `Dehaka`: one of reinforcement learning models, likes playing roach ravager.
+- `Zagara`: one of reinforcement learning models, likes roach rush.
 
 #### 3. Agent test
 With the given model, we provide multiple tests with our agent.
