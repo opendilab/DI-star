@@ -18,21 +18,6 @@ class CumStat:
     Property:
         players
     """
-    # data_keys = ['barracks_lv1', 'barracks_lv2', 'barracks_lv3',
-    #              'vehicle_lv1', 'vehicle_lv2', 'vehicle_lv3',
-    #              's_vehicle_lv1', 's_vehicle_lv2', 's_vehicle_lv3',
-    #              'plane_lv1', 'plane_lv2', 'plane_lv3',
-    #              'boat_lv1', 'boat_lv2', 'boat_lv3',
-    #              'airattack_lv1',
-    #              '指挥中心lv1', '指挥中心lv2', '指挥中心lv3', '指挥中心lv4',
-    #              '施工工地', '发电站', '补给中心',
-    #              '兵营lv1', '兵营lv2', '兵营lv3',
-    #              '突击车工厂lv1', '突击车工厂lv2', '突击车工厂lv3',
-    #              '特种车工厂lv1', '特种车工厂lv2', '特种车工厂lv3',
-    #              '空军工厂lv1', '空军工厂lv2', '空军工厂lv3', '机场',
-    #              '船坞lv1', '船坞lv2', '船坞lv3',
-    #              '核弹', '围墙',
-    #              '碉堡', '炮塔', '防空塔', '海防塔']
     not_use_keys = ['z_type','unit_num','step','winloss','agent_iters','bo_reward','cum_reward','bo_len','dist/bo','dist/bo_location','dist/cum','opponent_id','player_id','race','race_id']
     meaning_mapping = {
         'out/not': 0,
