@@ -3,8 +3,9 @@ from collections.abc import Sequence, Mapping
 from typing import List, Dict, Union, Any
 
 import torch
-from torch._six import container_abcs, string_classes, int_classes
-
+import collections.abc as container_abcs
+int_classes = int
+from torch._six import string_classes
 np_str_obj_array_pattern = re.compile(r'[SaUO]')
 
 default_collate_err_msg_format = (
