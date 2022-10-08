@@ -187,6 +187,8 @@ Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQ
 
 Discord server: [link](https://discord.gg/4ZDVwb97)
 
+
+Email: opendilab@pjlab.org.cn
 ## Citation
 ```latex
 @misc{distar,
