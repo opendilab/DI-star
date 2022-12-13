@@ -62,9 +62,9 @@ class SpatialEncoder(nn.Module):
                 bs, shape_x, shape_y = x[k].shape[0], self.whole_cfg.model.spatial_x, self.whole_cfg.model.spatial_y
                 embedding = torch.zeros(bs * shape_y * shape_x, device=x[k].device)
                 bias = torch.arange(bs, device=x[k].device).unsqueeze(dim=1) * shape_y * shape_x
-                x[k] = x[k] + bias
-                x[k] = x[k].view(-1)
-                embedding[x[k].long()] = 1.
+                x_k = x[k] + bias
+                x_k = x_k.view(-1)
+                embedding[x_k.long()] = 1.
                 embedding = embedding.view(bs, 1, shape_y, shape_x)
                 embeddings.append(embedding)
         embeddings.append(scatter_map)
