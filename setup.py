@@ -70,7 +70,7 @@ setup(
         'dill',
         'mock',
         'mpyq',
-        'numpy>=1.10',
+        'numpy==1.23.5',
         'portpicker>=1.2.0',
         'protobuf<=3.20.1',
         'pygame',
