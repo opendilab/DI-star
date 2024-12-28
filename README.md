@@ -4,17 +4,7 @@
 
 **Applestar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab. The main goal of this fork is to add support for Apple’s Metal Performance Shaders (MPS) on macOS.
 
-# Applestar Overview
-
-This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration.
-
-- [x] Added MPS support for model inference located at play.py *(updated on 2024-12-28)*
-- [x] Upgraded to use the latest version of pytorch that supports MPS through simple updates upon importing torch._six such as import as inf->math.inf and string_classes->str  *(updated on 2024-12-28)*
-- [x] Tested on Python 3.10.0, torch 2.5.1, torchaudio 2.5.1 *(updated on 2024-12-29)*
-- [x] StarCraft version remains to be on 4.10.0 to maintain the game version with the rl_model's training *(updated on 2024-12-29)*  
-- [ ] Add MPS support for MPS based distributed training
-
-# Versions
+## Versions
 Python 3.10.0, torch 2.5.1, torchaudio 2.5.1
 
 ### Command Line Usage Examples  
@@ -88,6 +78,13 @@ pip install -e .
 ## macOS Troubleshooting VideoCard related errors
 
 On occasions that the game session did not terminate gracefully, there will be specific videocard related errors. In order to fix this, open battle.net and under Settings, choose the option to Restore In-Game Options.
+
+## Rolling Updates
+- [x] Added MPS support for model inference located at play.py *(updated on 2024-12-28)*
+- [x] Upgraded to use the latest version of pytorch that supports MPS through simple updates upon importing torch._six such as import as inf->math.inf and string_classes->str  *(updated on 2024-12-28)*
+- [x] Tested on Python 3.10.0, torch 2.5.1, torchaudio 2.5.1 *(updated on 2024-12-29)*
+- [x] StarCraft version remains to be on 4.10.0 to maintain the game version with the rl_model's training *(updated on 2024-12-29)*  
+- [ ] Add MPS support for MPS based distributed training
 
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
