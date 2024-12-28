@@ -9,7 +9,7 @@
 This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration.
 
 - [x] Added MPS support for model inference located at play.py *(updated on 2024-12-28)*
-- [x] Upgraded to use the latest version of pytorch that supports MPS *(updated on 2024-12-28)*
+- [x] Upgraded to use the latest version of pytorch that supports MPS through simple updates upon importing torch._six such as import as inf->math.inf and string_classes->str  *(updated on 2024-12-28)*
 - [ ] Add MPS support for MPS based distributed training
 
 ### Command Line Usage Examples  
