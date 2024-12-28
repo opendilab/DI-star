@@ -11,24 +11,24 @@ This project is forked from opendilab/DI-star, created by OpenDILab, and Applest
 - [x] Added MPS support at inference
 - [ ] Add MPS support for MPS based distributed training
 
-## Command Line Usage Examples  
+### Command Line Usage Examples  
 
 Apple MPS (on Apple Silicon with MPS-capable PyTorch): Showing off different scenarios to use MPS (Metal) on Apple Silicon macOS; if MPS isn’t available, it falls back to CPU. And if you really want CPU only, you can pass --cpu.
 
-### Human vs Agent (Default) with MPS  
+#### Human vs Agent (Default) with MPS  
 ```bash
 python play.py
 ```
 A “human_vs_agent” match using rl_model.pth (since model1 is "default"), with MPS as long as your system supports it. If MPS isn’t there, it prints a warning and runs on CPU.
 
-### Human vs Agent with a Custom Model  
+#### Human vs Agent with a Custom Model  
 Suppose you have a file my_rl_model.pth in the same folder as play.py:  
 ```bash
 python play.py --model1 my_rl_model
 ```  
 This instructs the script to look for my_rl_model.pth. You’re still in “human_vs_agent” mode by default, so the AI uses your custom model, and you can go head-to-head as the human.
 
-### Agent vs Bot on MPS  
+#### Agent vs Bot on MPS  
 ```bash
 python play.py --game_type agent_vs_bot
 ```  
@@ -38,23 +38,21 @@ python play.py --model2 bot7 --game_type agent_vs_bot
 ```  
 The script will interpret “bot7” as the bot difficulty rather than a model file on disk.  
 
-### Agent vs Agent  
+#### Agent vs Agent  
 Use two different models:  
 ```bash
 python play.py --game_type agent_vs_agent --model1 rl_model --model2 sl_model
 ```  
 Now you have a reinforcement-learning model against a supervised-learning model. Both will run on MPS (or CPU fallback) with no human players.  
 
-#### Forcing CPU Mode
-
+##### Forcing CPU Mode
 If you don’t want MPS for some reason (maybe you’re testing CPU performance), you can override:
 ```bash
 python play.py --cpu
 ```
 This forcibly uses the CPU, ignoring MPS even if it’s available.
 
-6. Another Human vs Agent Example
-
+####Another Human vs Agent Example
 Imagine you’ve trained some advanced RL named grandmaster_model.pth. You want to see if you can beat it:
 ```bash
 python play.py --model1 grandmaster_model
@@ -62,6 +60,24 @@ python play.py --model1 grandmaster_model
 It’ll attempt MPS first, default to “human_vs_agent,” and use grandmaster_model.pth for the AI side. Let the showdown begin!
 
 That’s it! These examples should help you jump right into your preferred StarCraft II matchups, whether it’s a human player, a built-in bot, or a pair of AI models. Enjoy battling it out under Apple Metal (MPS) acceleration!
+
+## macOS Installation
+
+macOS prerequisites 
+```
+brew install python
+brew install pip
+brew install micromamba
+micromamba create -n pytorch python=3.10
+micromamba activate pytorch
+micromamba install pytorch tochvision tochaudio -c pytorch -c conda-forge
+```
+
+DI-star prerequisites
+Inside the Applestar directory, issue the following commands:
+```
+pip install -e .
+```
 
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
