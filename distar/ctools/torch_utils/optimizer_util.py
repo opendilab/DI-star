@@ -1,7 +1,6 @@
 import torch
 import math
 from torch.nn.utils import clip_grad_norm_, clip_grad_value_
-from torch._six import inf
 from typing import Union, Iterable, Tuple, Callable
 
 
@@ -11,7 +10,7 @@ def grad_ignore_norm(parameters, max_norm, norm_type=2):
     parameters = list(filter(lambda p: p.grad is not None, parameters))
     max_norm = float(max_norm)
     norm_type = float(norm_type)
-    if norm_type == inf:
+    if norm_type == math.inf:
         total_norm = max(p.grad.data.abs().max() for p in parameters)
     else:
         total_norm = 0
@@ -199,7 +198,7 @@ class Adam(torch.optim.Adam):
             for group in self.param_groups:
                 total_norm = 0
                 total_momentum_norm = 0
-                step = inf
+                step = math.inf
                 for p in group['params']:
                     if p.grad is None:
                         continue
@@ -263,7 +262,7 @@ class Adam(torch.optim.Adam):
                         p.grad.zero_()
         elif self._grad_ignore_type == 'ignore_momentum_norm':
             # might have multi param_group, we should calculate each group differently.
-            step = inf
+            step = math.inf
             for group in self.param_groups:
                 total_norm = 0
                 total_momentum_norm = 0
