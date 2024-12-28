@@ -206,6 +206,17 @@ Discord server: [link](https://discord.gg/dkZS2JF56X)
 }
 ```
 
+## Applestar Citation 
+```latex
+@misc{distar,
+    title={DI-star: An Open-sourse Reinforcement Learning Framework for StarCraftII},
+    author={DI-star Contributors},
+    publisher = {GitHub},
+    howpublished = {\url{https://github.com/opendilab/DI-star}},
+    year={2021},
+}
+```
+
 ## Information
 This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration. Applestar is based on DI-star, which is released under the Apache 2.0 license at the time of this fork.
 
