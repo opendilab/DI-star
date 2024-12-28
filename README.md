@@ -12,31 +12,31 @@ This project is forked from opendilab/DI-star, created by OpenDILab, and Applest
 - [x] Added MPS support at inference
 - [ ] Add MPS support for MPS based distributed training
 
-## Command Line Usage Examples
+## Command Line Usage Examples  
 
 Apple MPS (on Apple Silicon with MPS-capable PyTorch): Showing off different scenarios to use MPS (Metal) on Apple Silicon macOS; if MPS isn’t available, it falls back to CPU. And if you really want CPU only, you can pass --cpu.
 
-## Human vs Agent (Default) with MPS
-`python play.py`
+### Human vs Agent (Default) with MPS  
+`python play.py`  
 A “human_vs_agent” match using rl_model.pth (since model1 is "default"), with MPS as long as your system supports it. If MPS isn’t there, it prints a warning and runs on CPU.
 
-## Human vs Agent with a Custom Model
-Suppose you have a file my_rl_model.pth in the same folder as play.py:
-`python play.py --model1 my_rl_model`
+### Human vs Agent with a Custom Model  
+Suppose you have a file my_rl_model.pth in the same folder as play.py:  
+`python play.py --model1 my_rl_model`  
 This instructs the script to look for my_rl_model.pth. You’re still in “human_vs_agent” mode by default, so the AI uses your custom model, and you can go head-to-head as the human.
 
-## Agent vs Bot on MPS
-`python play.py --game_type agent_vs_bot`
-Here the AI model (model1) faces off against the built-in bot at difficulty bot10. If you want a lower-level bot, say bot7, do this:
-`python play.py --model2 bot7 --game_type agent_vs_bot`
-The script will interpret “bot7” as the bot difficulty rather than a model file on disk.
+### Agent vs Bot on MPS  
+`python play.py --game_type agent_vs_bot`  
+Here the AI model (model1) faces off against the built-in bot at difficulty bot10. If you want a lower-level bot, say bot7, do this:  
+`python play.py --model2 bot7 --game_type agent_vs_bot`  
+The script will interpret “bot7” as the bot difficulty rather than a model file on disk.  
 
-## Agent vs Agent
-Use two different models:
-`python play.py --game_type agent_vs_agent --model1 rl_model --model2 sl_model`
-Now you have a reinforcement-learning model against a supervised-learning model. Both will run on MPS (or CPU fallback) with no human players.
+### Agent vs Agent  
+Use two different models:  
+`python play.py --game_type agent_vs_agent --model1 rl_model --model2 sl_model`  
+Now you have a reinforcement-learning model against a supervised-learning model. Both will run on MPS (or CPU fallback) with no human players.  
 
-5. Forcing CPU Mode
+#### Forcing CPU Mode
 
 If you don’t want MPS for some reason (maybe you’re testing CPU performance), you can override:
 
