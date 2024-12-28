@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
 
-**Applestar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab. The main goal of this fork is to add support for Apple’s Metal Performance Shaders (MPS) on macOS.
+**Applestar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab. This fork adds support for Apple’s Metal Performance Shaders (MPS) on macOS.
 
 ## Versions
 Python 3.10.0, torch 2.5.1, torchaudio 2.5.1
