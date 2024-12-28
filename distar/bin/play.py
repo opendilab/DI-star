@@ -40,6 +40,8 @@ def load_default_config():
         }
     }
 
+print("DEBUG: Running the updated play.py with --race support!")
+
 def main():
     parser = argparse.ArgumentParser(
         description="Time to have a little fun with StarCraft II via Applestar, focusing on MPS."
@@ -68,6 +70,16 @@ def main():
         choices=["agent_vs_agent", "agent_vs_bot", "human_vs_agent"],
         help="Choose your match style. Default is 'human_vs_agent'."
     )
+
+    # v0.1.1 Added single race argument with three valid choices, defaulting to 'zerg'.
+    parser.add_argument(
+        "--race",
+        type=str,
+        default="zerg",
+        choices=["zerg", "protoss", "terran"],
+        help="Which SC2 race to use for player side. Defaults to zerg."
+    )
+
     args = parser.parse_args()
 
     # Ensure SC2PATH is found
@@ -154,6 +166,11 @@ def main():
         raise FileNotFoundError(f"[ERROR] Model1 is nowhere to be found at {model1}")
     if not os.path.exists(model2):
         raise FileNotFoundError(f"[ERROR] Model2 is nowhere to be found at {model2}")
+
+    # v0.1.1 Override the first slot in user_config["env"]["races"]
+    # so your player is Terran, Protoss, or Zerg as requested.
+    user_config["env"]["races"][1] = args.race
+    # The second entry (user_config["env"]["races"][1]) remains "zerg" by default
 
     # Game type logic
     if args.game_type == "agent_vs_agent":
