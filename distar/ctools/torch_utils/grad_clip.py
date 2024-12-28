@@ -2,7 +2,6 @@ import torch
 from collections import defaultdict
 import math
 from torch.nn.utils import clip_grad_norm_
-from torch._six import inf
 
 
 def build_grad_clip(cfg):
@@ -12,7 +11,7 @@ def build_grad_clip(cfg):
     clip_begin_step = cfg.get('begin_step', 100)
     clip_ignore_threshold = cfg.get('ignore_threshold', 3)
     if clip_norm_type == 'inf':
-        clip_norm_type = inf
+        clip_norm_type = math.inf
     return GradClip(clip_type, clip_threshold, clip_norm_type, clip_begin_step, clip_ignore_threshold)
 
 

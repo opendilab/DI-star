@@ -5,7 +5,6 @@ from typing import List, Dict, Union, Any
 import torch
 import collections.abc as container_abcs
 int_classes = int
-from torch._six import string_classes
 np_str_obj_array_pattern = re.compile(r'[SaUO]')
 
 default_collate_err_msg_format = (
@@ -74,7 +73,7 @@ def default_collate(batch: Sequence) -> Union[torch.Tensor, Mapping, Sequence]:
     elif isinstance(elem, int_classes):
         dtype = torch.bool if isinstance(elem, bool) else torch.int64
         return torch.tensor(batch, dtype=dtype)
-    elif isinstance(elem, string_classes):
+    elif isinstance(elem, str):
         return batch
     elif isinstance(elem, container_abcs.Mapping):
         return {key: default_collate([d[key] for d in batch]) for key in elem}
@@ -118,7 +117,7 @@ def default_collate_with_dim(batch,device='cpu',dim=0, k=None):
         return torch.tensor(batch,device=device)
     elif isinstance(elem, int_classes):
         return torch.tensor(batch,device=device)
-    elif isinstance(elem, string_classes):
+    elif isinstance(elem, str):
         return batch
     elif isinstance(elem, container_abcs.Mapping):
         return {key: default_collate_with_dim([d[key] for d in batch if key in d.keys()],device=device,dim=dim, k=key) for key in elem}
