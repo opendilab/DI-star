@@ -9,7 +9,8 @@ The main goal of this fork is to add support for Apple’s Metal Performance Sha
 
 This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration.
 
-- Added MPS support at inference
+- [x] Added MPS support at inference
+- [ ] Add MPS support for MPS based distributed training
 
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
