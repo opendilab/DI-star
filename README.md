@@ -1,19 +1,27 @@
-# Overview
+# Applestar
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
+
+**Applestar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab.  
+The main goal of this fork is to add support for Apple’s Metal Performance Shaders (MPS) on macOS.
+
+# Applestar Overview
+
+This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration.
+
+- Added MPS support at inference
+
+## License and Attribution
+This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
+
+# DI-Star Overview
 DI-star: A large-scale game AI distributed training platform specially developed for the StarCraft II. We've already trained grand-master AI！This project contains:
-
 - [x] Play demo and test code (try and play with our agent!)
-
 - [x] First version of pre-trained SL and RL agent (only Zerg vs Zerg)
-
 - [x] Training code of Supervised Learning and Reinforcement Learning *(updated by 2022-01-31)*
-
 - [x] Training baseline with limited resource(one PC) and training guidance [here](docs/guidance_to_small_scale_training.md) *(New! updated 2022-04-24)*
-
 - [x] Agents fought with [Harstem (YouTube)](https://www.youtube.com/watch?v=fvQF-24IpXs&t=813s)  *(updated by 2022-04-01)*
-
 - [ ] More stronger pre-trained RL agents *(WIP)*
-
-
 
 ## Usage
 
@@ -187,7 +195,7 @@ Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQ
 
 Discord server: [link](https://discord.gg/dkZS2JF56X)
 
-## Citation
+## DI-Star Citation
 ```latex
 @misc{distar,
     title={DI-star: An Open-sourse Reinforcement Learning Framework for StarCraftII},
@@ -198,5 +206,6 @@ Discord server: [link](https://discord.gg/dkZS2JF56X)
 }
 ```
 
-## License
-DI-star released under the Apache 2.0 license.
+## Information
+This project is forked from opendilab/DI-star, created by OpenDILab, and Applestar is focused on adding macOS Metal (MPS) acceleration. Applestar is based on DI-star, which is released under the Apache 2.0 license at the time of this fork.
+
