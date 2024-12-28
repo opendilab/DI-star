@@ -1,8 +1,8 @@
-# Applestar
+# MetalStar: High-Performance Metal Performance Shaders MPS for StarCraft II AI
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
 
-**Applestar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab. This fork adds support for Apple’s Metal Performance Shaders (MPS) on macOS.
+**AppleStar** is a fork of the [DI-star repository](https://github.com/opendilab/DI-star) by OpenDILab which is in turn inspired by DeepMind's AlphaStar. This fork adds support for Apple’s Metal Performance Shaders (MPS) on macOS.
 
 ## Versions
 Python 3.10.0, torch 2.5.1, torchaudio 2.5.1
@@ -270,7 +270,7 @@ Slack: [link](https://join.slack.com/t/opendilab/shared_invite/zt-v9tmv4fp-nUBAQ
 
 Discord server: [link](https://discord.gg/dkZS2JF56X)
 
-## DI-Star Citation
+## Recommended Citation MetalStar and DI-star (upstream)
 ```latex
 @misc{distar,
     title={DI-star: An Open-sourse Reinforcement Learning Framework for StarCraftII},
@@ -279,15 +279,12 @@ Discord server: [link](https://discord.gg/dkZS2JF56X)
     howpublished = {\url{https://github.com/opendilab/DI-star}},
     year={2021},
 }
-```
 
-## Applestar Citation 
-```latex
-@misc{applestar,
-    title={Applestar: DI-star utilising macOS Metal Performance Shaders(MPS)},
+@misc{metalstar,
+    title={MetalStar: High-Performance Metal Performance Shaders MPS for StarCraft II AI},
     author={Jaymari Chua},
-    publisher = {GitHub},
-    howpublished = {\url{https://github.com/jaymarichua/Applestar}},
+    publisher={GitHub},
+    howpublished={\url{https://github.com/jaymarichua/MetalStar}},
     year={2024},
 }
 ```
