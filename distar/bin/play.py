@@ -8,7 +8,15 @@ import torch
 
 # Yanking in the Actor from our codebase. Adjust if your structure differs.
 from distar.actor import Actor
+from distar.ctools.utils import read_config
 
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message="Setting attributes on ParameterList is not supported."
+)
+
+# Load a default config as an alternative to read_config through user_config = load_default_config()
 def load_default_config():
     """
     Returning a simple user_config so we have a baseline to work from.
@@ -62,6 +70,7 @@ def main():
     )
     args = parser.parse_args()
 
+    # Ensure SC2PATH is found
     sc2path = os.environ.get("SC2PATH", "")
     if not sc2path:
         if sys.platform == "darwin":
@@ -81,25 +90,46 @@ def main():
     else:
         if not os.path.isdir(sc2path):
             raise NotADirectoryError(
-                f"SC2PATH is currently '{sc2path}', but there's no directory there. Please verify."
+                f"SC2PATH is currently '{sc2path}', but there's no directory there. Check your install."
             )
 
-    user_config = load_default_config()
+    # Load user_config.yaml
+    config_path = os.path.join(os.path.dirname(__file__), 'user_config.yaml')
+    user_config = read_config(config_path)
 
+    # Override for human player and real-time mode
+    user_config.actor.job_type = "eval_test"
+    user_config.common.type = "play"
+    user_config.actor.episode_num = 1
+    user_config.env.realtime = True
+
+    # Override CUDA setting
+    user_config["actor"]["use_cuda"] = False
+
+    # Decide device: MPS > CUDA > CPU
     if args.cpu:
         print("[INFO] CPU mode only. MPS is sidelined.")
         user_config["actor"]["device"] = "cpu"
         user_config["actor"]["use_mps"] = False
+        user_config["actor"]["use_cuda"] = False
     else:
         if torch.backends.mps.is_available():
             print("[INFO] MPS is alive and well, using Metal for acceleration!")
             user_config["actor"]["device"] = "mps"
             user_config["actor"]["use_mps"] = True
+            user_config["actor"]["use_cuda"] = False
+        elif torch.cuda.is_available():
+            print("[WARNING] No MPS support found. Trying CUDA next. Check your Applestar version if CUDA is supported.")
+            user_config["actor"]["device"] = "cuda"
+            user_config["actor"]["use_mps"] = False
+            user_config["actor"]["use_cuda"] = True
         else:
             print("[WARNING] No MPS support found. Falling back to CPU.")
             user_config["actor"]["device"] = "cpu"
             user_config["actor"]["use_mps"] = False
+            user_config["actor"]["use_cuda"] = False
 
+    # Model paths & checks
     default_model_path = os.path.join(os.path.dirname(__file__), "rl_model.pth")
 
     if args.model1 is not None:
@@ -125,6 +155,7 @@ def main():
     if not os.path.exists(model2):
         raise FileNotFoundError(f"[ERROR] Model2 is nowhere to be found at {model2}")
 
+    # Game type logic
     if args.game_type == "agent_vs_agent":
         user_config["env"]["player_ids"] = [
             os.path.basename(model1).split(".")[0],
@@ -145,7 +176,8 @@ def main():
             os.path.basename(model1).split(".")[0],
             "human"
         ]
-
+    
+    # Create Actor & Run
     actor = Actor(user_config)
     actor.run()
 
