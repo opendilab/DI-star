@@ -66,7 +66,7 @@ brew install pip
 brew install micromamba
 micromamba create -n pytorch python=3.10
 micromamba activate pytorch
-micromamba install pytorch tochvision tochaudio -c pytorch -c conda-forge
+micromamba install pytorch torchvision torchaudio -c pytorch -c conda-forge
 ```
 
 DI-star prerequisites
