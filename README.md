@@ -12,6 +12,14 @@ This project is forked from opendilab/DI-star, created by OpenDILab, and Applest
 - [x] Added MPS support at inference
 - [ ] Add MPS support for MPS based distributed training
 
+## Command Line Usage Examples
+
+Apple MPS (on Apple Silicon with MPS-capable PyTorch):
+`python play.py --mps`
+
+Mac users on Apple Silicon can run:
+`python play.py --mps --model1 rl_model --game_type agent_vs_bot`
+
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
 
