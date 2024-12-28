@@ -20,6 +20,46 @@ Apple MPS (on Apple Silicon with MPS-capable PyTorch):
 Mac users on Apple Silicon can run:
 `python play.py --mps --model1 rl_model --game_type agent_vs_bot`
 
+Showing off different scenarios to use MPS (Metal) on Apple Silicon macOS; if MPS isn’t available, it falls back to CPU. And if you really want CPU only, you can pass --cpu.
+
+## Human vs Agent (Default) with MPS
+`python play.py`
+A “human_vs_agent” match using rl_model.pth (since model1 is "default"), with MPS as long as your system supports it. If MPS isn’t there, it prints a warning and runs on CPU.
+
+## Human vs Agent with a Custom Model
+Suppose you have a file my_rl_model.pth in the same folder as play.py:
+`python play.py --model1 my_rl_model`
+This instructs the script to look for my_rl_model.pth. You’re still in “human_vs_agent” mode by default, so the AI uses your custom model, and you can go head-to-head as the human.
+
+## Agent vs Bot on MPS
+`python play.py --game_type agent_vs_bot`
+Here the AI model (model1) faces off against the built-in bot at difficulty bot10. If you want a lower-level bot, say bot7, do this:
+`python play.py --model2 bot7 --game_type agent_vs_bot`
+The script will interpret “bot7” as the bot difficulty rather than a model file on disk.
+
+## Agent vs Agent
+Use two different models:
+`python play.py --game_type agent_vs_agent --model1 rl_model --model2 sl_model`
+Now you have a reinforcement-learning model against a supervised-learning model. Both will run on MPS (or CPU fallback) with no human players.
+
+5. Forcing CPU Mode
+
+If you don’t want MPS for some reason (maybe you’re testing CPU performance), you can override:
+
+python play.py --cpu
+
+This forcibly uses the CPU, ignoring MPS even if it’s available.
+
+6. Another Human vs Agent Example
+
+Imagine you’ve trained some advanced RL brain named grandmaster_model.pth. You want to see if you can beat it:
+
+python play.py --model1 grandmaster_model
+
+It’ll attempt MPS first, default to “human_vs_agent,” and use grandmaster_model.pth for the AI side. Let the showdown begin!
+
+That’s it! These examples should help you jump right into your preferred StarCraft II matchups, whether it’s a human player, a built-in bot, or a pair of AI models. Enjoy battling it out under Apple Metal (MPS) acceleration!
+
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
 
