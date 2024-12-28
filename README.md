@@ -53,7 +53,7 @@ python play.py --cpu
 ```
 This forcibly uses the CPU, ignoring MPS even if it’s available.
 
-####Another Human vs Agent Example
+#### Another Human vs Agent Example
 Imagine you’ve trained some advanced RL named grandmaster_model.pth. You want to see if you can beat it:
 ```bash
 python play.py --model1 grandmaster_model
@@ -79,6 +79,10 @@ Inside the Applestar directory, issue the following commands:
 ```
 pip install -e .
 ```
+
+## macOS Troubleshooting VideoCard related errors
+
+On occasions that the game session did not terminate gracefully, there will be specific videocard related errors. In order to fix this, open battle.net and under Settings, choose the option to Restore In-Game Options.
 
 ## License and Attribution
 This project is licensed under the [Apache 2.0 License](./LICENSE). The original DI-star is (c) OpenDILab, and all work in this fork is (c) 2024 Jaymari Chua.
