@@ -14,13 +14,7 @@ This project is forked from opendilab/DI-star, created by OpenDILab, and Applest
 
 ## Command Line Usage Examples
 
-Apple MPS (on Apple Silicon with MPS-capable PyTorch):
-`python play.py --mps`
-
-Mac users on Apple Silicon can run:
-`python play.py --mps --model1 rl_model --game_type agent_vs_bot`
-
-Showing off different scenarios to use MPS (Metal) on Apple Silicon macOS; if MPS isn’t available, it falls back to CPU. And if you really want CPU only, you can pass --cpu.
+Apple MPS (on Apple Silicon with MPS-capable PyTorch): Showing off different scenarios to use MPS (Metal) on Apple Silicon macOS; if MPS isn’t available, it falls back to CPU. And if you really want CPU only, you can pass --cpu.
 
 ## Human vs Agent (Default) with MPS
 `python play.py`
