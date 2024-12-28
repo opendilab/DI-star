@@ -208,12 +208,12 @@ Discord server: [link](https://discord.gg/dkZS2JF56X)
 
 ## Applestar Citation 
 ```latex
-@misc{distar,
-    title={DI-star: An Open-sourse Reinforcement Learning Framework for StarCraftII},
-    author={DI-star Contributors},
+@misc{applestar,
+    title={Applestar: DI-star utilising macOS Metal Performance Shaders(MPS)},
+    author={Jaymari Chua},
     publisher = {GitHub},
-    howpublished = {\url{https://github.com/opendilab/DI-star}},
-    year={2021},
+    howpublished = {\url{https://github.com/jaymarichua/Applestar}},
+    year={2024},
 }
 ```
 
