@@ -55,7 +55,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', type=str, default=None)
     args = parser.parse_args()
     model_name = args.name + '.pth'
-    url = 'https://opendilab.net/download/DI-star/' + model_name
+    url = f"https://huggingface.co/OpenDILabCommunity/DI-star/resolve/main/{model_name}?download=true"
     path = os.path.join(os.path.dirname(__file__), model_name)
     print('download model to {}'.format(path))
     d = Downloader(url, path, 5)
