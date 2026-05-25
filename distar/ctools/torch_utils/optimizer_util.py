@@ -1,7 +1,7 @@
 import torch
 import math
 from torch.nn.utils import clip_grad_norm_, clip_grad_value_
-from torch._six import inf
+from math import inf
 from typing import Union, Iterable, Tuple, Callable
 
 

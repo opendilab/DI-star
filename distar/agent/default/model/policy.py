@@ -32,7 +32,7 @@ class Policy(nn.Module):
         logit['queued'], action['queued'], embeddings = self.queued_head(embeddings)
 
         # selected_units_head cannot be compiled to onnx due to indice
-        su_mask = SELECTED_UNITS_MASK[action['action_type']]
+        su_mask = SELECTED_UNITS_MASK.to(action['action_type'].device)[action['action_type']]
         logit['selected_units'], action['selected_units'], embeddings, selected_units_num, extra_units = self.selected_units_head(
                 embeddings, entity_embeddings, entity_num, None, None, su_mask
             )

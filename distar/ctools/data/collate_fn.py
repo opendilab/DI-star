@@ -5,7 +5,7 @@ from typing import List, Dict, Union, Any
 import torch
 import collections.abc as container_abcs
 int_classes = int
-from torch._six import string_classes
+string_classes = (str, bytes)
 np_str_obj_array_pattern = re.compile(r'[SaUO]')
 
 default_collate_err_msg_format = (

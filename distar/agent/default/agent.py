@@ -401,10 +401,10 @@ class Agent:
         selected_units = ''
         su_len = len(action_info['selected_units'])
         if ACTIONS[action_type]['selected_units']:
-            for i, u in enumerate(action_info['selected_units'][:-1].tolist()):
+            for i, u in enumerate(action_info['selected_units'].cpu()[:-1].tolist()):
                 selected_units += ' ' + str(get_unit_type(UNIT_TYPES[self._observation['entity_info']['unit_type'][u]])).split('.')[-1] + '({:.2f})'.format(torch.exp(logp['selected_units'][i]).item())
             selected_units += ' ' + 'end({:.2f})'.format(torch.exp(logp['selected_units'][-1]).item())
-        unit_types = set(self._observation['entity_info']['unit_type'][action_info['selected_units'][:-1]].tolist())
+        unit_types = set(self._observation['entity_info']['unit_type'][action_info['selected_units'].cpu()[:-1]].tolist())
         target_unit = None
         if ACTIONS[action_type]['target_unit']:
             target_unit = str(get_unit_type(UNIT_TYPES[self._observation['entity_info']['unit_type'][action_info['target_unit'].item()]])).split('.')[-1]
