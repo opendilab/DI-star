@@ -123,7 +123,7 @@ class SelectedUnitsHead(nn.Module):
         key = torch.cat([key, padding_end], dim=1)
         end_embeddings = torch.ones(key.shape, dtype=key.dtype, device=key.device) * self.end_embedding.squeeze(dim=0)
         flag = torch.ones(key.shape[:2], dtype=torch.bool, device=key.device).unsqueeze(dim=2)
-        flag[torch.arange(bs), entity_num] = 0
+        flag[torch.arange(bs, device=flag.device), entity_num] = 0
         end_embeddings = end_embeddings * ~flag
         key = key * flag
         key = key + end_embeddings
@@ -160,7 +160,7 @@ class SelectedUnitsHead(nn.Module):
         results_list, logits_list = [], []
         state = [(torch.zeros(ae.shape[0], 32, device=ae.device), torch.zeros(ae.shape[0], 32, device=ae.device)) for _
                  in range(self.num_layers)]
-        logits_mask[torch.arange(bs), entity_num] = torch.tensor([0], dtype=torch.bool, device=ae.device)
+        logits_mask[torch.arange(bs, device=ae.device), entity_num] = torch.tensor([0], dtype=torch.bool, device=ae.device)
 
         result: Optional[Tensor] = None
         results: Optional[Tensor] = None
@@ -177,21 +177,21 @@ class SelectedUnitsHead(nn.Module):
                     (torch.zeros(ae.shape[0], 32, device=ae.device), torch.zeros(ae.shape[0], 32, device=ae.device)) for
                     _ in range(self.num_layers)]
             logits_mask = logits_mask.repeat(max(seq_len, 1), 1, 1)  # b, n -> s, b, n
-            logits_mask[0, torch.arange(bs), entity_num] = 0  # end flag is not available at first selection
+            logits_mask[0, torch.arange(bs, device=ae.device), entity_num] = 0  # end flag is not available at first selection
             selected_units_one_hot = torch.zeros(*key_embeddings.shape[:2], device=ae.device).unsqueeze(dim=2)
             for i in range(max(seq_len, 1)):
                 if i > 0:
                     logits_mask[i] = logits_mask[i - 1]
                     if i == 1:  # enable end flag
-                        logits_mask[i, torch.arange(bs), entity_num] = 1
-                    logits_mask[i, torch.arange(bs), selected_units[:, i - 1]] = 0  # mask selected units
+                        logits_mask[i, torch.arange(bs, device=ae.device), entity_num] = 1
+                    logits_mask[i, torch.arange(bs, device=ae.device), selected_units[:, i - 1]] = 0  # mask selected units
                 lstm_input = self.query_fc2(self.query_fc1(ae)).unsqueeze(0)
                 lstm_output, state = self.lstm(lstm_input, state)
                 queries.append(lstm_output)
                 if self.whole_cfg.model.entity_reduce_type == 'selected_units_num' or 'attention' in self.whole_cfg.model.entity_reduce_type:
                     new_selected_units_one_hot = selected_units_one_hot.clone()  # inplace operation can not backward
                     end_flag[selected_units[:, i] == entity_num] = 1
-                    new_selected_units_one_hot[torch.arange(bs)[~end_flag], selected_units[:, i][~end_flag], :] = 1
+                    new_selected_units_one_hot[torch.arange(bs, device=ae.device)[~end_flag], selected_units[:, i][~end_flag], :] = 1
                     if self.whole_cfg.model.entity_reduce_type == 'selected_units_num':
                         selected_units_emebedding = (key_embeddings * new_selected_units_one_hot).sum(dim=1)
                         selected_units_emebedding[selected_units_num != 0] = selected_units_emebedding[selected_units_num != 0] / \
@@ -205,7 +205,7 @@ class SelectedUnitsHead(nn.Module):
                                                                             mask=new_selected_units_one_hot,)
                     selected_units_one_hot = new_selected_units_one_hot.clone()
                 else:
-                    ae = ae + key_embeddings[torch.arange(bs),
+                    ae = ae + key_embeddings[torch.arange(bs, device=ae.device),
                                              selected_units[:, i]] * (i + 1 < selected_units_num).unsqueeze(1)
 
             queries = torch.cat(queries, dim=0).unsqueeze(dim=2)  # s, b, 1, -1
@@ -222,10 +222,10 @@ class SelectedUnitsHead(nn.Module):
                     for i in range(seq_len):
                         if i > 0:
                             if i == 1:  # end flag can be selected at second selection
-                                iou_logits_mask[torch.arange(bs), entity_num] = torch.tensor([1], dtype=torch.bool,
+                                iou_logits_mask[torch.arange(bs, device=ae.device), entity_num] = torch.tensor([1], dtype=torch.bool,
                                                                                              device=ae.device)
                             if result is not None:
-                                iou_logits_mask[torch.arange(bs), result.detach()] = torch.tensor([0], dtype=torch.bool,
+                                iou_logits_mask[torch.arange(bs, device=ae.device), result.detach()] = torch.tensor([0], dtype=torch.bool,
                                                                                                   device=ae.device)  # mask selected units
                         lstm_input = self.query_fc2(self.query_fc1(iou_ae)).unsqueeze(0)
                         lstm_output, iou_state = self.lstm(lstm_input, iou_state)
@@ -239,7 +239,7 @@ class SelectedUnitsHead(nn.Module):
                         end_flag[result == entity_num] = torch.tensor([1], dtype=torch.bool, device=ae.device)
                         results_list.append(result)
                         if self.whole_cfg.model.entity_reduce_type == 'selected_units_num' or 'attention' in self.whole_cfg.model.entity_reduce_type:
-                            selected_units_one_hot[torch.arange(bs)[~end_flag], result[~end_flag], :] = 1
+                            selected_units_one_hot[torch.arange(bs, device=ae.device)[~end_flag], result[~end_flag], :] = 1
                             if self.whole_cfg.model.entity_reduce_type == 'selected_units_num':
                                 selected_units_emebedding = (key_embeddings * selected_units_one_hot).sum(
                                     dim=1) / selected_units_one_hot.sum(dim=1)
@@ -254,7 +254,7 @@ class SelectedUnitsHead(nn.Module):
                                                                                         dim=1).squeeze(dim=1),
                                                                                     mask=selected_units_one_hot, )
                         else:
-                            iou_ae = iou_ae + key_embeddings[torch.arange(bs), result] * ~end_flag.unsqueeze(dim=1)
+                            iou_ae = iou_ae + key_embeddings[torch.arange(bs, device=ae.device), result] * ~end_flag.unsqueeze(dim=1)
                     results = torch.stack(results_list, dim=0)
                     results = results.transpose(1, 0).contiguous()
 
@@ -267,10 +267,10 @@ class SelectedUnitsHead(nn.Module):
             for i in range(self.max_select_num):
                 if i > 0:
                     if i == 1:  # end flag can be selected at second selection
-                        logits_mask[torch.arange(bs), entity_num] = torch.tensor([1], dtype=torch.bool,
+                        logits_mask[torch.arange(bs, device=ae.device), entity_num] = torch.tensor([1], dtype=torch.bool,
                                                                                  device=ae.device)
                     if result is not None:
-                        logits_mask[torch.arange(bs), result.detach()] = torch.tensor([0], dtype=torch.bool,
+                        logits_mask[torch.arange(bs, device=ae.device), result.detach()] = torch.tensor([0], dtype=torch.bool,
                                                                                       device=ae.device)  # mask selected units
                 lstm_input = self.query_fc2(self.query_fc1(ae)).unsqueeze(0)
                 lstm_output, state = self.lstm(lstm_input, state)
@@ -285,7 +285,7 @@ class SelectedUnitsHead(nn.Module):
                 results_list.append(result)
                 logits_list.append(step_logits)
                 if self.whole_cfg.model.entity_reduce_type == 'selected_units_num' or 'attention' in self.whole_cfg.model.entity_reduce_type:
-                    selected_units_one_hot[torch.arange(bs)[~end_flag], result[~end_flag], :] = 1
+                    selected_units_one_hot[torch.arange(bs, device=ae.device)[~end_flag], result[~end_flag], :] = 1
                     if self.whole_cfg.model.entity_reduce_type == 'selected_units_num':
                         selected_units_emebedding = (key_embeddings * selected_units_one_hot).sum(dim=1)
                         slected_num = selected_units_one_hot.sum(dim=1).squeeze(dim=1)
@@ -301,11 +301,11 @@ class SelectedUnitsHead(nn.Module):
                                                                                     dim=1).squeeze(dim=1),
                                                                                 mask=selected_units_one_hot, )
                 else:
-                    ae = ae + key_embeddings[torch.arange(bs), result] * ~end_flag.unsqueeze(dim=1)
+                    ae = ae + key_embeddings[torch.arange(bs, device=ae.device), result] * ~end_flag.unsqueeze(dim=1)
                 if end_flag.all():
                     break
             if self.extra_units:
-                end_flag_logit = step_logits[torch.arange(bs), entity_num]
+                end_flag_logit = step_logits[torch.arange(bs, device=ae.device), entity_num]
                 extra_units = ((step_logits > end_flag_logit.unsqueeze(dim=1)) * ~end_flag.unsqueeze(dim=1)).float()
             results = torch.stack(results_list, dim=0)
             results = results.transpose(1, 0).contiguous()
